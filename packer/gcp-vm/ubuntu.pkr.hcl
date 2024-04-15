@@ -49,12 +49,13 @@ build {
     ]
   }
 
-  post-processor "googlecompute-export" {
-    paths = [
-      "gs://onxp-terraform/vm/images/ubuntu-jammy.tar.gz",
-    ]
-    keep_input_artifact = true
-  }
+  // [optional] save to gcs
+  // post-processor "googlecompute-export" {
+  //   paths = [
+  //     "gs://onxp-terraform/vm/images/ubuntu-jammy.tar.gz",
+  //   ]
+  //   keep_input_artifact = true
+  // }
 }
 
 variable "project_id" {
