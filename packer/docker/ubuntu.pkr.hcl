@@ -22,8 +22,9 @@ source "docker" "ubuntu" {
   // base image, Packer will run it as container and do the provisioning
   image  = var.docker_image
 
-  // export the provisionied container to docker image
-  commit = true
+  // commit = true / /commit container to docker image
+  // discard = true // delete image after build
+  export_path = "/opt/data/ubuntu-jammy.tar" // use it if you want to use post-processor docker-import/docker-push
 }
 
 // will execute after container running
@@ -48,25 +49,23 @@ build {
     ]
   }
 
-  // executed after container provisioned and commited
-  post-processor "docker-tag" {
-    repository = "glendmaatita/ubuntu-jammy"
-    tags       = ["stable"]
-    only       = ["docker.ubuntu"]
+  post-processors {
+    // get artifact from build and import to local docker registry
+    post-processor "docker-import" {
+      repository = "glendmaatita/ubuntu-jammy"
+      tag = "stable"
+    }
+
+    // push to docker registry, must define docker-import as well
+    post-processor "docker-push" {
+      login = true // set true if using hub docker
+      // login_username = "username"
+      // login_password = "password"
+    }
   }
 
-  // get artifact from build and import to local docker registry
-  post-processor "docker-import" {
-    repository = "glendmaatita/ubuntu-jammy"
-    tag = "stable"
-  }
 
-  // push to docker registry, must define docker-import as well
-  // post-processor "docker-push" {
-  //   login = true // set true if using hub docker
-  //   login_username = "user"
-  //   login_password = "password"
-  // }
+  
 }
 
 variable "docker_image" {
