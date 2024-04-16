@@ -20,6 +20,7 @@ packer {
 source "googlecompute" "ubuntu" {
   project_id = var.project_id
   instance_name = "onxp-ubuntu-jammy"
+  image_name = "onxp-ubuntu-jammy" // default to packer-xyz
   source_image = "ubuntu-2204-jammy-v20240319"
   ssh_username = "glendmaatita.me@gmail.com"
   zone = "us-central1-a"
