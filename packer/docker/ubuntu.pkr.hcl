@@ -54,6 +54,19 @@ build {
     tags       = ["stable"]
     only       = ["docker.ubuntu"]
   }
+
+  // get artifact from build and import to local docker registry
+  post-processor "docker-import" {
+    repository = "glendmaatita/ubuntu-jammy"
+    tag = "stable"
+  }
+
+  // push to docker registry, must define docker-import as well
+  // post-processor "docker-push" {
+  //   login = true // set true if using hub docker
+  //   login_username = "user"
+  //   login_password = "password"
+  // }
 }
 
 variable "docker_image" {
