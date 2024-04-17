@@ -49,6 +49,7 @@ build {
     ]
   }
 
+  // grouping post processors
   post-processors {
     // get artifact from build and import to local docker registry
     post-processor "docker-import" {
@@ -63,9 +64,6 @@ build {
       // login_password = "password"
     }
   }
-
-
-  
 }
 
 variable "docker_image" {
