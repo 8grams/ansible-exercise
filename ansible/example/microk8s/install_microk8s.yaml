@@ -1,0 +1,33 @@
+- name: Install microk8s
+  become: yes
+  hosts: microk8s
+  tasks:
+    - community.general.snap:
+        classic: true
+        channel: 1.28
+        name:
+          - microk8s
+
+- name: Adding user to group
+  become: yes
+  hosts: microk8s
+  tasks:
+    - user:
+        name: ubuntu
+        groups: microk8s
+        append: yes
+
+- name: Change kube folder ownership
+  become: yes
+  hosts: microk8s
+  tasks:
+    - file:
+        path: /home/ubuntu/.kube
+        owner: ubuntu
+        group: ubuntu
+        state: directory
+
+- name: Enable microk8s common modules
+  hosts: microk8s
+  tasks: 
+    - command: microk8s enable dns cert-manager ingress hostpath-storage

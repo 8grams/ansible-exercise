@@ -1,0 +1,49 @@
+all:
+  hosts:
+    server_1:
+      ansible_host: 192.168.1.10
+      ansible_user: ubuntu
+    server_2:
+      ansible_host: 192.168.1.11
+      ansible_user: ubuntu
+    server_3:
+      ansible_host: 192.168.1.12
+      ansible_user: ubuntu
+    server_4:
+      ansible_host: 192.168.1.13
+      ansible_user: core
+    server_5:
+      ansible_host: 192.168.1.14
+      ansible_user: core
+  vars:
+    docker_version: 24.0.9
+    temp_file: /tmp/temp_file
+  children:
+    ubuntu:
+      hosts:
+        server_1:
+        server_2:
+        server_3:
+      vars:
+        ubuntu_version: 22.10
+    coreos:
+      hosts:
+        server_4:
+        server_5:
+      vars:
+        coreos_version: 39.20240407.3.0
+    webservers:
+      hosts:
+        server_1:
+        server_2:
+    dbservers:
+      hosts:
+        server_3:
+    loadbalancers:
+      hosts:
+        server_4:
+      vars:
+        lb_algorithm: round_robin
+    backupservers:
+      hosts:
+        server_5:

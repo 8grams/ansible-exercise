@@ -1,0 +1,30 @@
+- name: Install and start nginx
+  become: yes
+  hosts: webservers
+  tasks:
+    - name: Update apt
+      become: yes
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+    - name: Install nginx
+      become: yes
+      apt:
+        name: nginx
+        state: present
+    - name: Start nginx
+      become: yes
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
+    # check if nginx is running
+    - name: Gather facts about nginx service
+      ansible.builtin.service_facts:
+
+    - name: Check if nginx is running
+      ansible.builtin.debug:
+        msg: "Nginx is running"
+      when: "'nginx' in ansible_facts.services and ansible_facts.services['nginx'].state == 'running'"
+      

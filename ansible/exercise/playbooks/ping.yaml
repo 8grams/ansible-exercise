@@ -1,0 +1,10 @@
+# ansible-playbook -v -i ./inventory.ini ping.yaml
+- name: Ping for healthcheck
+  hosts: webservers
+  tasks:
+   - name: Ping my hosts
+     ansible.builtin.ping:
+
+   - name: Print message
+     ansible.builtin.debug:
+       msg: "Pong"
