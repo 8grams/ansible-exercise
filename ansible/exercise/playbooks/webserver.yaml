@@ -1,3 +1,10 @@
+# Run all tasks: ansible-playbook webserver.yaml
+# To test: curl -v http://exercise.dev
+# Run specific tasks based on tags: ansible-playbook webserver.yaml --tags check
+
+# Controlling the order of tasks
+# Run tasks start from a specific tasks: ansible-playbook webserver.yaml --start-at-task="Gather facts about nginx service"
+# Run step by step: ansible-playbook webserver.yaml --step
 - name: Install and start nginx
   become: yes
   hosts: webservers
@@ -7,24 +14,78 @@
       apt:
         update_cache: yes
         cache_valid_time: 3600
+      tags: install
     - name: Install nginx
       become: yes
       apt:
         name: nginx
         state: present
+      tags: install
     - name: Start nginx
       become: yes
       systemd:
         name: nginx
         state: started
         enabled: yes
+      tags:
+        - install
+        - start
+
+    # Using template, powered by Jinja2
+    - name: Set default homepage
+      become: yes
+      vars:
+        - my_ansible_template_title: "Welcome to Ansible"
+      template:
+        src: ./template/index.html.j2
+        dest: /var/www/html/index.html
+      tags:
+        - install
+
+
+    # This task is using 'never', means it will not run by default unless we explicitly mention it using tags
+    # ansible-playbook webserver.yaml --tags never
+    # ansible-playbook webserver.yaml --tags restart
+    - name: Restart nginx
+      become: yes
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: yes
+      tags:
+        - never
+        - restart
+
+    # ansible-playbook webserver.yaml --tags stop
+    - name: Stop nginx
+      become: yes
+      systemd:
+        name: nginx
+        state: stopped
+        enabled: yes
+      tags:
+        - never
+        - stop
+
+    # ansible-playbook webserver.yaml --tags start
+    - name: Start nginx
+      become: yes
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+      tags:
+        - never
+        - start
 
     # check if nginx is running
     - name: Gather facts about nginx service
       ansible.builtin.service_facts:
+      tags: check
 
     - name: Check if nginx is running
       ansible.builtin.debug:
         msg: "Nginx is running"
       when: "'nginx' in ansible_facts.services and ansible_facts.services['nginx'].state == 'running'"
+      tags: check
       
