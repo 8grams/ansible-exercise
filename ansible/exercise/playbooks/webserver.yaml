@@ -1,4 +1,5 @@
 # Run all tasks: ansible-playbook webserver.yaml
+# To validate tasks: ansible-playbook webserver.yaml --check
 # To test: curl -v http://exercise.dev
 # Run specific tasks based on tags: ansible-playbook webserver.yaml --tags check
 

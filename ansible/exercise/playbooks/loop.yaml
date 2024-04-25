@@ -1,16 +1,31 @@
-# Run all tasks: ansible-playbook when.yaml
-# using conditional when to determine where task to be executed
-- name: Upgrade Packages on all hosts
+# Run all tasks: ansible-playbook loop.yaml
+# using loops to install multiple packages
+- name: Install docker, docker-compose, git, 
   become: yes
-  hosts: all
+  hosts: ubuntu
+  vars:
+    packages: [docker, docker-compose, git]
   tasks:
-    - name: Upgrade Packages Debian
+    - name: Install Packages
       apt:
-        update_cache: yes
-        upgrade: dist
-      when: ansible_os_family == 'Debian'
-    - name: Upgrade Packages Redhat
-      yum:
-        name: "*"
+        name: '{{item}}'
         state: latest
-      when: ansible_os_family == 'Redhat'
+      with_items: '{{packages}}'
+
+    # another task. create a file using templates and loop
+    - name: Create files
+      vars:
+        my_files:
+          - name: "title_1"
+            title: "Title 1"
+            subtitle: "Subtitle 1"
+          - name: "title_2"
+            title: "Title 2"
+            subtitle: "Subtitle 2"
+          - name: "title_3"
+            title: "Title 3"
+            subtitle: "Subtitle 3"
+      template:
+        src: ./template/loop.html.j2
+        dest: /var/www/html/{{item.name}}.html
+      with_items: '{{my_files}}'
