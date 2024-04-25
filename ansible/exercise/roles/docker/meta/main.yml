@@ -1,0 +1,15 @@
+galaxy_info:
+  author: Glend Maatita
+  description: Simple Deployment using Docker and Nginx
+  company: OnXP
+  license: MIT
+  min_ansible_version: "2.1"
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - jammy
+
+  galaxy_tags: ["docker", "nginx"]
+
+dependencies: []

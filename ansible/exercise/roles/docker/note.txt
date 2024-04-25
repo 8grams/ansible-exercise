@@ -1,0 +1,5 @@
+# 1. Setup VM with docker installed
+# 2. Run docker glendmaatita/exercise-app:latest
+# 3. Setup Nginx for reverse proxy
+# 4. Setup SSL with Certbot
+# ansible-galaxy init docker

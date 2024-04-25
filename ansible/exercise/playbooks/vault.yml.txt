@@ -1,0 +1,3 @@
+# to create: ansible-vault create vault.yml
+# to run: ansible-playbook vault.yml --ask-vault-pas
+
