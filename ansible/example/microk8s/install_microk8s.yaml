@@ -31,3 +31,13 @@
   hosts: microk8s
   tasks: 
     - command: microk8s enable dns cert-manager ingress hostpath-storage
+
+- name: Add server IP Address to csr.conf.template
+  become: yes
+  hosts: microk8s
+  tasks:
+    - ini_file:
+        path: /var/snap/microk8s/current/certs/csr.conf.template
+        section: alt_names
+        option: IP.1000
+        value: "{{ ansible_host }}"
