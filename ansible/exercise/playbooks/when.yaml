@@ -1,0 +1,16 @@
+# Run all tasks: ansible-playbook when.yaml
+# using conditional when to determine where task to be executed
+- name: Upgrade Packages on all hosts
+  become: yes
+  hosts: all
+  tasks:
+    - name: Upgrade Packages Debian
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_os_family == 'Debian'
+    - name: Upgrade Packages Redhat
+      yum:
+        name: "*"
+        state: latest
+      when: ansible_os_family == 'Redhat'
