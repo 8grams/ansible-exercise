@@ -1,4 +1,4 @@
-# ansible-playbook -v -i ./inventory.ini ping.yaml
+# ansible-playbook -v ping.yaml
 - name: Ping for healthcheck
   hosts: webservers
   tasks:
