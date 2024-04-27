@@ -1,4 +1,5 @@
 # ansible-playbook -v ping.yaml
+# More of builtin function: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html
 - name: Ping for healthcheck
   hosts: webservers
   tasks:

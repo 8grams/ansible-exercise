@@ -33,6 +33,8 @@
         - start
 
     # Using template, powered by Jinja2
+    # Template: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_templating.html
+    # Variables: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html
     - name: Set default homepage
       become: yes
       vars:
@@ -42,6 +44,9 @@
         dest: /var/www/html/index.html
       tags:
         - install
+      # notify will run if the task is changed
+      notify:
+        - restart nginx service
 
 
     # This task is using 'never', means it will not run by default unless we explicitly mention it using tags
@@ -90,3 +95,7 @@
       when: "'nginx' in ansible_facts.services and ansible_facts.services['nginx'].state == 'running'"
       tags: check
       
+  handlers:
+    - name: restart nginx service
+      # using built-in module service
+      service: name=nginx state=restarted

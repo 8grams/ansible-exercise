@@ -1,0 +1,17 @@
+# ping
+ansible webservers -m ping
+
+# Gathering server info
+ansible webservers -m setup
+
+# Execute shell command
+ansible webservers -m shell -a "ls -l /tmp"
+
+# Perform a start, restart, or stop on services that are installed and running on your system
+ansible webservers -m service -a "name=nginx state=started"
+
+# Working with files
+ansible webservers -m file -a "path=/tmp/myfolder owner=ubuntu group=ubuntu state=directory"
+
+# Create user. -b to become root
+ansible webservers -b -m user -a "name=glend comment='Glend Maatita' state=present"
