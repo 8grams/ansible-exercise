@@ -1,0 +1,12 @@
+networks:
+  exercise_network:
+    driver: bridge
+
+services:
+  exercise-app:
+    image: glendmaatita/exercise-app:latest
+    container_name: "exercise-app"
+    ports:
+      - "3000:3000"
+    networks:
+      - exercise_network

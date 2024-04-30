@@ -1,0 +1,17 @@
+# install docker
+- include_tasks: debian.yaml
+
+- name: Install Docker and Docker Compose
+  apt:
+    update_cache: yes
+    name: 
+      - docker-ce={{ docker_version }}
+      - docker-ce-cli={{ docker_version }}
+      - docker-compose
+    state: present
+
+- include_tasks: user.yaml
+  notify:
+    - refresh group
+    - restart docker
+    - test docker

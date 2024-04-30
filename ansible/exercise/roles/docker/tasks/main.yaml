@@ -1,0 +1,27 @@
+# install docker
+---
+- include_tasks: docker.yaml
+  hosts: all
+  become: yes
+  when: ansible_os_family == 'Debian'
+
+- include_tasks: nginx.yaml
+  hosts: all
+  become: yes
+  when: ansible_os_family == 'Debian'
+
+- include_tasks: app.yaml
+  hosts: all
+  become: yes
+  when: ansible_os_family == 'Debian'
+
+- include_tasks: nginx.yaml
+  hosts: all
+  become: yes
+  when: ansible_os_family == 'Debian'
+
+- include_tasks: certbot.yaml
+  hosts: all
+  become: yes
+  when: ansible_os_family == 'Debian'
+

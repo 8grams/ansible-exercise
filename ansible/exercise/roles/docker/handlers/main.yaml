@@ -1,0 +1,16 @@
+# handlers file for docker
+
+---
+- name: refresh group
+  shell: newgrp docker
+
+- name: restart docker
+  service:
+    name: docker
+    state: restarted
+
+- name: test docker
+  shell: docker run hello-world
+
+- name: restart nginx service
+  service: name=nginx state=restarted

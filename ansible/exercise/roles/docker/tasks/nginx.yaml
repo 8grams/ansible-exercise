@@ -1,0 +1,23 @@
+- name: Install nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Start nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Override proxy conf
+  template:
+    src: ./../files/nginx/includes
+    dest: /etc/nginx/includes
+    directory_mode: yes
+
+- name: Override nginx conf
+  template:
+    src: ./../files/nginx/default.conf.j2
+    dest: /etc/nginx/conf.d/default.conf
+  notify:
+  - restart nginx service

@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    server_name {{ public_url }};
+
+    location / {
+        proxy_pass http://exercise-app:3000;
+        include /etc/nginx/includes/proxy.conf;
+    }
+}

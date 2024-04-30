@@ -1,0 +1,5 @@
+- name: Priviosion app using docker
+  become: yes
+  hosts: webservers
+  roles:
+    - ansibile_docker_compose
