@@ -7,3 +7,7 @@
     groups: "{{ docker_group }}"
     append: true
   with_items: "{{ docker_users }}"
+  notify:
+  - refresh group
+  - restart docker
+  - test docker

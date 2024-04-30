@@ -4,7 +4,7 @@ networks:
 
 services:
   exercise-app:
-    image: glendmaatita/exercise-app:latest
+    image: glendmaatita/exercise-app:v1.0.2
     container_name: "exercise-app"
     ports:
       - "3000:3000"

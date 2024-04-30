@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: ansibile_docker_compose
+  role_name: docker
   author: Glend Maatita
   description: Simple Deployment using Docker and Nginx
   company: OnXP
@@ -12,6 +12,3 @@ galaxy_info:
     - jammy
 
   galaxy_tags: ["docker", "nginx"]
-
-dependencies:
-  - role: community.docker

@@ -1,0 +1,5 @@
+- name: Privision app using docker
+  become: yes
+  hosts: webservers
+  roles:
+    - docker

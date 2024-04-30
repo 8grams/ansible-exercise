@@ -2,6 +2,7 @@
 # vars file for docker
 
 app_path: /app
+nginx_conf_path: /etc/nginx/includes
 public_url: ansible.bootcamp.onxp.net
 author_email: glend@onxp.net
 docker_version: 5:26.1.0-1~ubuntu.22.04~jammy

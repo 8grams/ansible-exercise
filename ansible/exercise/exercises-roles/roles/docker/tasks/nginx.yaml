@@ -10,10 +10,9 @@
     enabled: yes
 
 - name: Override proxy conf
-  template:
-    src: ./../files/nginx/includes
-    dest: /etc/nginx/includes
-    directory_mode: yes
+  copy:
+    src: ./../files/nginx/includes/proxy.conf
+    dest: "{{ nginx_conf_path }}/proxy.conf"
 
 - name: Override nginx conf
   template:

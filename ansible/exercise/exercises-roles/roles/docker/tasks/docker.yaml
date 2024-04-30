@@ -9,9 +9,7 @@
       - docker-ce-cli={{ docker_version }}
       - docker-compose
     state: present
+  notify: 
+    - start docker
 
 - include_tasks: user.yaml
-  notify:
-    - refresh group
-    - restart docker
-    - test docker
