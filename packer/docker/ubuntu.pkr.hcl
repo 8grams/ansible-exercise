@@ -58,6 +58,11 @@ build {
     }
 
     // push to docker registry, must define docker-import as well
+    // For integrate with Vault
+    // export VAULT_ADDR='http://vault.example.com:8200'
+    // export VAULT_TOKEN='your-vault-token'
+    // login_username = vault("secret/data/dockerhub", "username")
+    // login_password = vault("secret/data/dockerhub", "password")
     post-processor "docker-push" {
       login = true // set true if using hub docker
       // login_username = "username"
