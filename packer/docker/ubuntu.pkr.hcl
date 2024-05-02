@@ -22,7 +22,7 @@ source "docker" "ubuntu" {
   // base image, Packer will run it as container and do the provisioning
   image  = var.docker_image
 
-  // commit = true / /commit container to docker image
+  // commit = true // commit container to docker image
   // discard = true // delete image after build
   export_path = "/opt/data/ubuntu-jammy.tar" // use it if you want to use post-processor docker-import/docker-push
 }
