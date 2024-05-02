@@ -1,6 +1,5 @@
-# handlers file for docker
-
 ---
+# handlers file for swarm
 - name: restart docker
   service:
     name: docker

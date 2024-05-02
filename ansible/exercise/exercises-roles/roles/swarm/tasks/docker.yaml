@@ -1,0 +1,14 @@
+# install docker
+- include_tasks: debian.yaml
+
+- name: Install Docker
+  apt:
+    update_cache: yes
+    name: 
+      - docker-ce={{ docker_version }}
+      - docker-ce-cli={{ docker_version }}
+    state: present
+  notify: 
+    - start docker
+
+- include_tasks: user.yaml

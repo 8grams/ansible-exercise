@@ -1,0 +1,5 @@
+- name: Privision Docker Swarm Cluster
+  become: yes
+  hosts: all_hosts
+  roles:
+    - swarm
