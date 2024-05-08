@@ -1,0 +1,35 @@
+# https://docs.ansible.com/ansible/latest/collections/google/cloud/gcp_container_cluster_module.html
+# ansible-playbook 6-kubernetes.yaml
+---
+- name: Create Kubernetes Cluster
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Create a Kubernetes cluster
+      community.general.gcp_container_cluster:
+        name: "{{ cluster_name }}"
+        location: "{{ location }}"
+        network: "{{ network_name }}"
+        subnetwork: "{{ subnetwork_name }}"
+        initial_node_count: 1
+        logging_service: "none"
+        monitoring_service: "none"
+        ip_allocation_policy:
+          cluster_secondary_range_name: "k8s-pods-ip-range"
+          cluster_ipv4_cidr_block: "k8s-services-ip-range"
+        private_cluster_config:
+          enable_private_endpoint: false
+          enable_private_nodes: true
+          master_ipv4_cidr_block: "172.24.0.0/28"
+        release_channel:
+          channel: "REGULAR"
+        addons_config:
+          http_load_balancing:
+            disabled: true
+          horizontal_pod_autoscaling:
+            disabled: true
+        project: "{{ project }}"
+        auth_kind: "{{ auth_kind }}"
+        service_account_file: "{{ service_account_file }}"
+        state: present
+      register: cluster

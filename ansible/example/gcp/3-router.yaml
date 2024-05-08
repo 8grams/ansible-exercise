@@ -1,0 +1,33 @@
+# https://docs.ansible.com/ansible/latest/collections/google/cloud/gcp_compute_router_module.html
+# ansible-playbook 3-router.yaml
+---
+- name: Create Router
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Create a router
+      google.cloud.gcp_compute_router:
+        name: "{{ router_name }}"
+        network: 
+          selfLink: https://www.googleapis.com/compute/v1/projects/{{ project }}/global/networks/{{ network_name }}
+        region: "{{ region }}"
+        project: "{{ project }}"
+        auth_kind: "{{ auth_kind }}"
+        service_account_file: "{{ service_account_file }}"
+        state: present
+      register: router
+      tags:
+        - router
+    - name: Delete Router
+      google.cloud.gcp_compute_router:
+        name: "{{ router_name }}"
+        region: "{{ region }}"
+        project: "{{ project }}"
+        network: 
+          selfLink: https://www.googleapis.com/compute/v1/projects/{{ project }}/global/networks/{{ network_name }}
+        auth_kind: "{{ auth_kind }}"
+        service_account_file: "{{ service_account_file }}"
+        state: absent
+      tags:
+        - never
+        - delete

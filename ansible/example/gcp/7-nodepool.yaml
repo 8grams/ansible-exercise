@@ -1,0 +1,29 @@
+# https://docs.ansible.com/ansible/latest/collections/google/cloud/gcp_container_node_pool_module.html
+# ansible-playbook 7-nodepool.yaml
+---
+- name: Create Node Pool
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Create a node pool
+      community.general.gcp_container_node_pool:
+        name: "{{ node_pool_name }}"
+        location: "{{ location }}"
+        cluster: "{{ cluster_name }}"
+        initial_node_count: 1
+        config:
+          machine_type: "e2-micro"
+          oauth_scopes:
+            - "https://www.googleapis.com/auth/cloud-platform"
+        autoscaling:
+          enabled: true
+          min_node_count: 1
+          max_node_count: 2
+        management:
+          auto_repair: true
+          auto_upgrade: true
+        project: "{{ project }}"
+        auth_kind: "{{ auth_kind }}"
+        service_account_file: "{{ service_account_file }}"
+        state: present
+      register: node_pool

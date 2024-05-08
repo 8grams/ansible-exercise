@@ -1,0 +1,41 @@
+# ansible-playbook 4-nat.yaml
+---
+- name: Create NAT Gateway with static IP
+  hosts: localhost
+  gather_facts: no
+  vars:
+    project: "your_project"
+    auth_kind: "serviceaccount"
+    service_account_file: "/path/to/your/service-account-file.json"
+    region: "us-central1"
+    router_name: "your_router_name"
+    nat_name: "your_nat_name"
+    address_name: "your_address_name"
+  tasks:
+    # https://docs.ansible.com/ansible/latest/collections/google/cloud/gcp_compute_address_module.html
+    - name: Create a static IP address
+      google.cloud.gcp_compute_address:
+        name: "{{ address_name }}"
+        region: "{{ region }}"
+        project: "{{ project }}"
+        auth_kind: "{{ auth_kind }}"
+        service_account_file: "{{ service_account_file }}"
+        state: present
+      register: address
+
+    - name: Create a NAT gateway
+      google.cloud.gcp_compute_router_nat:
+        name: "{{ nat_name }}"
+        router: "{{ router_name }}"
+        region: "{{ region }}"
+        nat_ip_allocate_option: MANUAL_ONLY
+        nat_ips: ["{{ address.selfLink }}"]
+        source_subnetwork_ip_ranges_to_nat: LIST_OF_SUBNETWORKS
+        subnetworks:
+          - name: "{{ subnetwork_name }}"
+            source_ip_ranges_to_nat: ALL_IP_RANGES
+        project: "{{ project }}"
+        auth_kind: "{{ auth_kind }}"
+        service_account_file: "{{ service_account_file }}"
+        state: present
+      register: nat
