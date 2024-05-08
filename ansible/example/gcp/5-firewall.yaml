@@ -8,7 +8,8 @@
     - name: Create a firewall rule
       google.cloud.gcp_compute_firewall:
         name: "allow-ssh"
-        network: "{{ network_name }}"
+        network: 
+          selfLink: https://www.googleapis.com/compute/v1/projects/{{ project }}/global/networks/{{ network_name }}
         allowed:
           - IPProtocol: tcp
             ports: ['22']
@@ -18,3 +19,17 @@
         service_account_file: "{{ service_account_file }}"
         state: present
       register: firewall
+      tags:
+        - firewall
+    - name: Delete Firewall Rule
+      google.cloud.gcp_compute_firewall:
+        name: "allow-ssh"
+        network: 
+          selfLink: https://www.googleapis.com/compute/v1/projects/{{ project }}/global/networks/{{ network_name }}
+        project: "{{ project }}"
+        auth_kind: "{{ auth_kind }}"
+        service_account_file: "{{ service_account_file }}"
+        state: absent
+      tags:
+        - never
+        - delete

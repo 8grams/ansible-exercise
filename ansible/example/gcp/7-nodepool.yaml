@@ -6,7 +6,7 @@
   gather_facts: no
   tasks:
     - name: Create a node pool
-      community.general.gcp_container_node_pool:
+      google.cloud.gcp_container_node_pool:
         name: "{{ node_pool_name }}"
         location: "{{ location }}"
         cluster: "{{ cluster_name }}"
@@ -27,3 +27,17 @@
         service_account_file: "{{ service_account_file }}"
         state: present
       register: node_pool
+      tags:
+        - nodepool
+    - name: Delete node pool 
+      google.cloud.gcp_container_node_pool:
+        name: "{{ node_pool_name }}"
+        location: "{{ location }}"
+        cluster: "{{ cluster_name }}"
+        project: "{{ project }}"
+        auth_kind: "{{ auth_kind }}"
+        service_account_file: "{{ service_account_file }}"
+        state: absent
+      tags:
+        - never
+        - delete

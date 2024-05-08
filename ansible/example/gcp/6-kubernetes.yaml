@@ -6,10 +6,11 @@
   gather_facts: no
   tasks:
     - name: Create a Kubernetes cluster
-      community.general.gcp_container_cluster:
+      google.cloud.gcp_container_cluster:
         name: "{{ cluster_name }}"
         location: "{{ location }}"
-        network: "{{ network_name }}"
+        network: 
+          selfLink: https://www.googleapis.com/compute/v1/projects/{{ project }}/global/networks/{{ network_name }}
         subnetwork: "{{ subnetwork_name }}"
         initial_node_count: 1
         logging_service: "none"
@@ -33,3 +34,16 @@
         service_account_file: "{{ service_account_file }}"
         state: present
       register: cluster
+      tags:
+        - kubernetes
+    - name: Delete cluster
+      google.cloud.gcp_container_cluster:
+        name: "{{ cluster_name }}"
+        location: "{{ location }}"
+        project: "{{ project }}"
+        auth_kind: "{{ auth_kind }}"
+        service_account_file: "{{ service_account_file }}"
+        state: absent
+      tags:
+        - never
+        - delete
