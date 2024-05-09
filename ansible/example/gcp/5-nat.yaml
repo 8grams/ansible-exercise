@@ -1,0 +1,28 @@
+# ansible-playbook 5-nat.yaml
+---
+- name: Create NAT Gateway with static IP
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Create a NAT gateway
+      command:
+        cmd: >
+          gcloud compute routers nats create {{ nat_name }} 
+          --router={{ router_name }}
+          --project={{project}} 
+          --region={{region}} 
+          --nat-custom-subnet-ip-ranges={{subnetwork_name}}
+          --nat-external-ip-pool={{address.name}}
+      register: nat
+      tags:
+        - nat
+    - name: Delete NAT gateway 
+      command:
+        cmd: >
+          gcloud compute routers nats delete {{ nat_name }} 
+          --router={{ router_name }}
+          --project={{project}} 
+          --region={{region}}
+      tags:
+        - never
+        - delete

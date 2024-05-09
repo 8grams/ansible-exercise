@@ -1,5 +1,5 @@
 # https://docs.ansible.com/ansible/latest/collections/google/cloud/gcp_compute_subnetwork_module.html
-# ansible-playbook 2-subnetwork.yaml
+# ansible-playbook 3-subnetwork.yaml
 ---
 - name: Create Subnetwork
   hosts: localhost
@@ -21,19 +21,5 @@
         auth_kind: "{{ auth_kind }}"
         service_account_file: "{{ service_account_file }}"
         private_ip_google_access: true
-        state: present
+        state: "{{ 'absent' if delete else 'present' }}"
       register: subnetwork
-    - name: Delete subnetwork 
-      google.cloud.gcp_compute_subnetwork:
-        name: "{{ subnetwork_name }}"
-        region: "{{ region }}"
-        network: 
-          selfLink: https://www.googleapis.com/compute/v1/projects/{{ project }}/global/networks/{{ network_name }}
-        project: "{{ project }}"
-        auth_kind: "{{ auth_kind }}"
-        service_account_file: "{{ service_account_file }}"
-        ip_cidr_range: "10.0.0.0/16"
-        state: absent
-      tags:
-        - never
-        - delete

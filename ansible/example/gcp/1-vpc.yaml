@@ -16,22 +16,11 @@
         routing_config:
           routing_mode: "REGIONAL"
         mtu: 1460
-        state: present
+        state: "{{ 'absent' if delete else 'present' }}"
       tags: 
         - vpc
       register: network
-
-    # ansible-playbook 1-vpc.yaml --tags delete
-    - name: Delete network
-      google.cloud.gcp_compute_network:
-        name: "{{ network_name }}"
-        project: "{{ project }}"
-        auth_kind: "{{ auth_kind }}"
-        service_account_file: "{{ service_account_file }}"
-        state: absent
-      tags:
-        - never
-        - delete
+      
     # https://docs.ansible.com/ansible/latest/collections/google/cloud/gcp_compute_global_address_module.html
     - name: Create Global IP address
       google.cloud.gcp_compute_global_address:
@@ -44,24 +33,7 @@
         purpose: "VPC_PEERING"
         auth_kind: "{{ auth_kind }}"
         service_account_file: "{{ service_account_file }}"
-        state: present
+        state: "{{ 'absent' if delete else 'present' }}"
       tags:
         - vpc-address
       register: address
-
-    - name: Delete Global IP address
-      google.cloud.gcp_compute_global_address:
-        name: "{{ address_name }}"
-        project: "{{ project }}"
-        auth_kind: "{{ auth_kind }}"
-        service_account_file: "{{ service_account_file }}"
-        state: absent
-      tags:
-        - never
-        - delete
-    
-    - name: Set gcloud project
-      command: gcloud config set project "{{ project }}"
-    - name: Create google_service_networking_connection
-      command: gcloud services vpc-peerings connect --service=servicenetworking.googleapis.com --ranges="{{ range_name }}" --network="{{ network_name }}" --project="{{ project }}"
-    

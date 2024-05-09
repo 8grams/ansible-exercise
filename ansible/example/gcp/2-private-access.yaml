@@ -1,0 +1,17 @@
+# pip install requests google-auth
+# ansible-playbook 2-private-access.yaml
+---
+- name: Private Access
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Set gcloud project
+      command: gcloud config set project "{{ project }}"
+
+    - name: Create google_service_networking_connection
+      command: gcloud services vpc-peerings connect --service=servicenetworking.googleapis.com --ranges="{{ address_name }}" --network="{{ network_name }}" --project="{{ project }}"
+      when: delete is not defined
+    
+    - name: Delete google_service_networking_connection
+      command: gcloud services vpc-peerings delete --service=servicenetworking.googleapis.com --network="{{ network_name }}" --project="{{ project }}"
+      when: delete is defined and delete

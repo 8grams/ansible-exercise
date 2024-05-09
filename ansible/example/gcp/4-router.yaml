@@ -1,5 +1,5 @@
 # https://docs.ansible.com/ansible/latest/collections/google/cloud/gcp_compute_router_module.html
-# ansible-playbook 3-router.yaml
+# ansible-playbook 4-router.yaml
 ---
 - name: Create Router
   hosts: localhost
@@ -14,20 +14,20 @@
         project: "{{ project }}"
         auth_kind: "{{ auth_kind }}"
         service_account_file: "{{ service_account_file }}"
-        state: present
+        state: "{{ 'absent' if delete else 'present' }}"
       register: router
       tags:
         - router
-    - name: Delete Router
-      google.cloud.gcp_compute_router:
-        name: "{{ router_name }}"
+    
+    # https://docs.ansible.com/ansible/latest/collections/google/cloud/gcp_compute_address_module.html
+    - name: Create a static IP address
+      google.cloud.gcp_compute_address:
+        name: "{{ address_name }}"
         region: "{{ region }}"
         project: "{{ project }}"
-        network: 
-          selfLink: https://www.googleapis.com/compute/v1/projects/{{ project }}/global/networks/{{ network_name }}
         auth_kind: "{{ auth_kind }}"
         service_account_file: "{{ service_account_file }}"
-        state: absent
+        state: "{{ 'absent' if delete else 'present' }}"
+      register: address
       tags:
-        - never
-        - delete
+        - nat-address
