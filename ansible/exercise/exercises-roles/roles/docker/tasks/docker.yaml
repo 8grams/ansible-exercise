@@ -9,7 +9,7 @@
       - docker-ce-cli={{ docker_version }}
       - docker-compose
     state: present
-  notify: 
-    - start docker
+- name: start docker
+  service: name=docker state=started
 
 - include_tasks: user.yaml

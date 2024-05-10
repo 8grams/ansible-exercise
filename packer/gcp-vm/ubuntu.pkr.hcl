@@ -13,6 +13,11 @@ packer {
       // use provided credentials file 
       // credentials_file = "./google.json"
     }
+
+    ansible = {
+      version = "~> 1"
+      source = "github.com/hashicorp/ansible"
+    }
   }
 }
 

@@ -7,7 +7,9 @@
     groups: "{{ docker_group }}"
     append: true
   with_items: "{{ docker_users }}"
-  notify:
-  - refresh group
-  - restart docker
-  - test docker
+- name: restart docker
+  service:
+    name: docker
+    state: restarted
+- name: test docker
+  shell: docker run hello-world

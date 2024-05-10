@@ -1,0 +1,135 @@
+# install nomad
+# Reference: https://developer.hashicorp.com/nomad/docs/install
+
+---
+- name: Install Nomad
+  become: yes
+  hosts: nomad
+  tasks:
+    - name: Update apt and install necessary packages
+      apt:
+        update_cache: yes
+        name: ['wget', 'gpg', 'coreutils', 'apt-transport-https', 'ca-certificates', 'curl', 'gnupg-agent', 'software-properties-common']
+        state: present
+
+    - name: Download HashiCorp GPG key
+      get_url:
+        url: https://apt.releases.hashicorp.com/gpg
+        dest: /tmp/hashicorp.gpg
+
+    # wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    - name: Add HashiCorp GPG key
+      shell: gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg /tmp/hashicorp.gpg
+
+    # echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+    - name: Add HashiCorp repository to sources.list.d
+      copy:
+        content: "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+        dest: /etc/apt/sources.list.d/hashicorp.list
+
+    # sudo apt-get update && sudo apt-get install nomad
+    - name: Install nomad
+      apt:
+        update_cache: yes
+        name: ['nomad']
+        state: present
+
+    # curl -L -o cni-plugins.tgz "https://github.com/containernetworking/plugins/releases/download/v1.0.0/cni-plugins-linux-$( [ $(uname -m) = aarch64 ] && echo arm64 || echo amd64)"-v1.0.0.tgz && \
+    - name: Determine architecture
+      command: uname -m
+      register: system_arch
+
+    - name: Set download URL for CNI plugins
+      set_fact:
+        cni_plugins_url: "https://github.com/containernetworking/plugins/releases/download/v1.0.0/cni-plugins-linux-{{ 'arm64' if system_arch.stdout == 'aarch64' else 'amd64' }}-v1.0.0.tgz"
+
+    - name: Download CNI plugins
+      get_url:
+        url: "{{ cni_plugins_url }}"
+        dest: "/tmp/cni-plugins.tgz"
+
+    # sudo mkdir -p /opt/cni/bin && \
+    # sudo tar -C /opt/cni/bin -xzf cni-plugins.tgz
+    - name: Create directory for CNI plugins
+      file:
+        path: /opt/cni/bin
+        state: directory
+
+    - name: Extract CNI plugins
+      unarchive:
+        src: "/tmp/cni-plugins.tgz"
+        dest: "/opt/cni/bin"
+        remote_src: yes
+
+    # echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-arptables 
+    # echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-ip6tables 
+    # echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-iptables
+
+    - name: Set bridge-nf-call-arptables to 1
+      copy:
+        content: "1"
+        dest: /proc/sys/net/bridge/bridge-nf-call-arptables
+
+    - name: Set bridge-nf-call-ip6tables to 1
+      copy:
+        content: "1"
+        dest: /proc/sys/net/bridge/bridge-nf-call-ip6tables
+
+    - name: Set bridge-nf-call-iptables to 1
+      copy:
+        content: "1"
+        dest: /proc/sys/net/bridge/bridge-nf-call-iptables
+
+
+    # net.bridge.bridge-nf-call-arptables = 1
+    # net.bridge.bridge-nf-call-ip6tables = 1
+    # net.bridge.bridge-nf-call-iptables = 1
+
+    - name: Set net.bridge.bridge-nf-call-arptables to 1
+      sysctl:
+        name: net.bridge.bridge-nf-call-arptables
+        value: '1'
+        state: present
+        sysctl_set: yes
+        reload: yes
+
+    - name: Set net.bridge.bridge-nf-call-ip6tables to 1
+      sysctl:
+        name: net.bridge.bridge-nf-call-ip6tables
+        value: '1'
+        state: present
+        sysctl_set: yes
+        reload: yes
+
+    - name: Set net.bridge.bridge-nf-call-iptables to 1
+      sysctl:
+        name: net.bridge.bridge-nf-call-iptables
+        value: '1'
+        state: present
+        sysctl_set: yes
+        reload: yes
+    
+    - name: Test nomad
+      command: nomad
+
+# install docker
+- name: Install Docker
+  become: yes
+  hosts: nomad
+  tasks:
+    - name: Add Docker's official GPG key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker's official apt repository
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+
+    - name: Add docker users to the docker group.
+      user:
+        name: "{{ item }}"
+        groups: "{{ docker_group }}"
+        append: true
+      with_items: "{{ docker_users }}"

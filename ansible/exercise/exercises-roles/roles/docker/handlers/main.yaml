@@ -1,16 +1,3 @@
 # handlers file for docker
 
 ---
-- name: restart docker
-  service:
-    name: docker
-    state: restarted
-
-- name: test docker
-  shell: docker run hello-world
-
-- name: restart nginx service
-  service: name=nginx state=restarted
-
-- name: start docker
-  service: name=docker state=started
