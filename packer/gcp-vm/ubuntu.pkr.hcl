@@ -55,13 +55,9 @@ build {
     ]
   }
 
-  // [optional] save to gcs
-  // post-processor "googlecompute-export" {
-  //   paths = [
-  //     "gs://onxp-terraform/vm/images/ubuntu-jammy.tar.gz",
-  //   ]
-  //   keep_input_artifact = true
-  // }
+  provisioner "ansible" {
+    playbook_file = "./../../ansible/example/docker/playbook.yaml"
+  }
 }
 
 variable "project_id" {
