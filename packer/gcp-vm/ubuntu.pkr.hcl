@@ -25,14 +25,22 @@ packer {
 source "googlecompute" "ubuntu" {
   project_id = var.project_id
   instance_name = "onxp-ubuntu-jammy"
-  image_name = "onxp-ubuntu-jammy" // default to packer-xyz
+  // add suffix (timestamp) and image_family to determine which image is latest
+  image_name = "onxp-ubuntu-jammy-${local.timestamp}"
+
+  // how to crete custom image family: https://cloud.google.com/compute/docs/images/create-custom#setting_families
   source_image = "ubuntu-2204-jammy-v20240319"
   ssh_username = "glendmaatita.me@gmail.com"
   zone = "us-central1-a"
-  disk_size = 40
+  disk_size = 20
   machine_type = "e2-micro"
   disk_type = "pd-standard"
   communicator = "ssh"
+
+  // dest image
+  image_project_id = var.project_id
+  image_storage_locations = ["us-central1"]
+  image_family = "onxp-ubuntu-jammy"
 }
 
 build {
@@ -55,12 +63,20 @@ build {
     ]
   }
 
+  // using ansible provisioner
+  // https://developer.hashicorp.com/packer/integrations/hashicorp/ansible
   provisioner "ansible" {
     playbook_file = "./../../ansible/example/docker/playbook.yaml"
+    extra_arguments = [ "--scp-extra-args", "'-O'" ]
   }
 }
 
 variable "project_id" {
   type    = string
   default = "mashanz-software-engineering"
+}
+
+// set as image suffix
+locals {
+  timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }

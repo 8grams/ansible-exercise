@@ -52,6 +52,7 @@ build {
   // grouping post processors
   post-processors {
     // get artifact from build and import to local docker registry
+    // https://developer.hashicorp.com/packer/integrations/hashicorp/docker/latest/components/post-processor/docker-import
     post-processor "docker-import" {
       repository = "glendmaatita/ubuntu-jammy"
       tag = "stable"
@@ -63,6 +64,7 @@ build {
     // export VAULT_TOKEN='your-vault-token'
     // login_username = vault("secret/data/dockerhub", "username")
     // login_password = vault("secret/data/dockerhub", "password")
+    // https://developer.hashicorp.com/packer/integrations/hashicorp/docker/latest/components/post-processor/docker-push
     post-processor "docker-push" {
       login = true // set true if using hub docker
       // login_username = "username"
