@@ -1,0 +1,6 @@
+---
+# vars file for nomad
+docker_version: 5:26.1.0-1~ubuntu.22.04~jammy
+docker_group: docker
+docker_users:
+  - ubuntu

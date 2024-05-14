@@ -1,0 +1,16 @@
+
+galaxy_info:
+  role_name: nomad
+  author: Glend Maatita
+  description: Create Nomad CLuster
+  company: OnXP
+  license: MIT
+  min_ansible_version: "2.1"
+  reference: https://developer.hashicorp.com/nomad/tutorials/enterprise/production-deployment-guide-vm-with-consul
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - jammy
+
+  galaxy_tags: ["nomad", "consul"]

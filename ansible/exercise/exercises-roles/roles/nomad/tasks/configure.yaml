@@ -1,0 +1,48 @@
+---
+- name: Create /opt/nomad directory
+  ansible.builtin.file:
+    path: /opt/nomad
+    state: directory
+    mode: '0755'
+
+- name: Create nomad user
+  ansible.builtin.user:
+    name: nomad
+    system: yes
+    home: /etc/nomad.d
+    shell: /bin/false
+
+- name: Create Nomad config
+  copy:
+    src: ./files/nomad.service.server
+    dest: /etc/systemd/system/nomad.service
+  when: "'nomad_server' in group_names"
+
+- name: Create Nomad config
+  copy:
+    src: ./files/nomad.service.client
+    dest: /etc/systemd/system/nomad.service
+  when: "'nomad_client' in group_names"
+
+- name: Set common config
+  ansible.builtin.file:
+    path: /etc/nomad.d
+    state: directory
+    mode: '0700'
+
+- name: Set datacenter
+  copy:
+    src: ./files/nomad.hcl.template
+    dest: /etc/nomad.d/nomad.hcl
+
+- name: Set node as server
+  copy:
+    src: ./files/server.hcl.template
+    dest: /etc/nomad.d/server.hcl
+  when: "'nomad_server' in group_names"
+
+- name: Set node as client
+  copy:
+    src: ./files/client.hcl.template
+    dest: /etc/nomad.d/client.hcl
+  when: "'nomad_client' in group_names"

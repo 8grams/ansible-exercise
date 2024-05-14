@@ -1,0 +1,10 @@
+---
+- name: Enable nomad service
+  ansible.builtin.systemd:
+    name: nomad
+    enabled: yes
+
+- name: Start nomad service
+  ansible.builtin.systemd:
+    name: nomad
+    state: started

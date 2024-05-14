@@ -1,0 +1,13 @@
+# task file for nomad
+---
+- include_tasks: docker.yaml
+  when: ansible_os_family == 'Debian'
+
+- include_tasks: nomad.yaml
+  when: ansible_os_family == 'Debian'
+
+- include_tasks: configure.yaml
+  when: ansible_os_family == 'Debian'
+
+- include_tasks: bootstrap.yaml
+  when: ansible_os_family == 'Debian'

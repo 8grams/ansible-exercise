@@ -1,0 +1,6 @@
+# ansible-playbook nomad.yaml
+- name: Privision Nomad Cluster
+  become: yes
+  hosts: nomad
+  roles:
+    - nomad
