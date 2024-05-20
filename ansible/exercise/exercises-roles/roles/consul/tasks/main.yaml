@@ -1,0 +1,13 @@
+---
+# tasks file for consul
+- include_tasks: debian.yaml
+  when: ansible_os_family == 'Debian'
+
+- include_tasks: directory.yaml
+  when: ansible_os_family == 'Debian'
+
+- include_tasks: config.yaml
+  when: ansible_os_family == 'Debian'
+
+- include_tasks: install.yaml
+  when: ansible_os_family == 'Debian'

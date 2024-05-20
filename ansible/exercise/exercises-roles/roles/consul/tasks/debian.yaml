@@ -1,0 +1,19 @@
+---
+- name: Update apt and install necessary packages
+  apt:
+    update_cache: yes
+    name: ['zip', 'wget', 'curl']
+    state: present
+
+- name: Create consul group
+  ansible.builtin.group:
+    name: "{{ consul_group }}"
+    gid: "{{ consul_gid }}"
+    state: present
+
+- name: Create consul user
+  ansible.builtin.user:
+    name: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    uid: "{{ consul_uid }}"
+    state: present

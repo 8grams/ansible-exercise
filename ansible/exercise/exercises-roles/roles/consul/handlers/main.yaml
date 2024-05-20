@@ -1,0 +1,13 @@
+---
+# handlers file for consul
+
+- name: Enable consul
+  ansible.builtin.service:
+    name: consul
+    enabled: yes
+
+- name: Start consul
+  ansible.builtin.service:
+    name: consul
+    state: started
+  when: consul_start | bool

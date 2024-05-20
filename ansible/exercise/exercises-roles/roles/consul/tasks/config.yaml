@@ -1,0 +1,47 @@
+---
+- name: Copy Cert Authority File
+  ansible.builtin.copy:
+    src: "./../files/ca.cert"
+    dest: /etc/consul.d/ssl/ca.cert
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: 0640
+    backup: yes
+
+- name: Copy Cert File
+  ansible.builtin.copy:
+    src: "./../files/consul.cert"
+    dest: /etc/consul.d/ssl/consul.cert
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: 0640
+    backup: yes
+
+- name: Copy Cert Key
+  ansible.builtin.copy:
+    src: "./../files/consul.key"
+    dest: /etc/consul.d/ssl/consul.key
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: 0640
+    backup: yes
+
+- name: Copy Server Config
+  ansible.builtin.template:
+    src: server_config.j2
+    dest: /etc/consul.d/config.json
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: 0640
+    backup: yes
+  when: "'consul_server' in group_names"
+  
+- name: Copy client Config
+  ansible.builtin.template:
+    src: client_config.j2
+    dest: /etc/consul.d/config.json
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: 0640
+    backup: yes
+  when: "'consul_client' in group_names"

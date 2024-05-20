@@ -1,0 +1,9 @@
+---
+# defaults file for consul
+consul_version: "1.18.1"
+
+# start consul by default
+consul_start: true
+
+# should be vault-ed
+consul_encryptkey: "E2y7K92PiKKbfGdoZvSi"

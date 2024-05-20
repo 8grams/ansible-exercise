@@ -1,0 +1,14 @@
+---
+# vars file for consul
+consul_zip_url: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
+
+# Consul user and group
+consul_group: "consul"
+consul_gid: "10010"
+consul_user: "consul"
+consul_uid: "10010"
+
+# Consul log level
+consul_loglevel: "INFO"
+
+consul_datacenter: "dc1"
