@@ -3,10 +3,10 @@ client {
   enabled = true
   node_class = "app"
   node_pool = "app_pool"
-  servers = {{ nomad_servers }}
+  servers = {{ nomad_servers | tojson }}
 
   server_join {
-    retry_join     = {{ nomad_servers }}
+    retry_join     = {{ nomad_servers | tojson }}
     retry_max      = 3
     retry_interval = "15s"
   }

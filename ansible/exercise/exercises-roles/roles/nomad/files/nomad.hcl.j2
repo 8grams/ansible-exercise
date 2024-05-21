@@ -1,12 +1,17 @@
+log_level = "DEBUG"
 datacenter = "dc1"
 data_dir = "/opt/nomad"
 
 # https://developer.hashicorp.com/nomad/docs/configuration/tls
 tls {
   http = true
+  rpc  = true
   ca_file = "/etc/nomad.d/ssl/ca.cert"
   cert_file = "/etc/nomad.d/ssl/consul.cert"
   key_file = "/etc/nomad.d/ssl/consul.key"
+
+  verify_server_hostname = true
+  verify_https_client    = true
 }
 
 # https://developer.hashicorp.com/nomad/docs/configuration/autopilot
@@ -37,7 +42,6 @@ consul {
 # https://developer.hashicorp.com/nomad/docs/configuration/ui
 ui {
   enabled =  true
- 
   content_security_policy {
     connect_src     = ["*"]
     default_src     = ["'none'"]
@@ -47,7 +51,7 @@ ui {
     script_src      = ["'self'"]
     style_src       = ["'self'","'unsafe-inline'"]
   }
- 
+
   consul {
     ui_url = "{{ consul_ui_url }}"
   }

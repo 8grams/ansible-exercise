@@ -19,5 +19,5 @@ client_addr = "0.0.0.0"
 ui_config {
     enabled = true
 }
-retry_join = {{ consul_servers }}
+retry_join = {{ consul_servers | tojson }}
 bootstrap_expect = 3

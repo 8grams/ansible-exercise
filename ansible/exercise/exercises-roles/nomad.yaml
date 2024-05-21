@@ -1,3 +1,7 @@
+# check nomad:
+# - systemctl status nomad
+# - sudo systemctl daemon-reload
+
 # ansible-playbook nomad.yaml
 - name: Privision Nomad Cluster
   become: yes

@@ -12,4 +12,4 @@ cert_file = /etc/consul.d/ssl/consul.cert
 key_file = /etc/consul.d/ssl/consul.key
 verify_incoming = true
 verify_outgoing = true
-retry_join = {{ consul_servers }}
+retry_join = {{ consul_servers | tojson }}

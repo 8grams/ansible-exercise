@@ -10,6 +10,11 @@
 # openssl x509 -req -in consul.csr -CA ca.cert -CAkey consul.key -CAcreateserial -out consul.cert -days 365
 
 # get ca.cert, consul.cert, and consul.key
+
+# check consul:
+# - systemctl status consul
+
+
 # ansible-playbook consul.yaml
 - name: Privision Consul Cluster
   become: yes
