@@ -26,24 +26,24 @@
 
 - name: Set common config
   ansible.builtin.file:
-    path: /etc/nomad.d
+    path: /etc/nomad.d/ssl
     state: directory
     mode: '0700'
 
 - name: Set datacenter
   copy:
-    src: ./files/nomad.hcl.template
+    src: ./files/nomad.hcl.j2
     dest: /etc/nomad.d/nomad.hcl
 
 - name: Set node as server
   template:
-    src: ./files/server.hcl.template
+    src: ./files/server.hcl.j2
     dest: /etc/nomad.d/server.hcl
   when: "'nomad_server' in group_names"
 
 - name: Set node as client
   template:
-    src: ./files/client.hcl.template
+    src: ./files/client.hcl.j2
     dest: /etc/nomad.d/client.hcl
   when: "'nomad_client' in group_names"
 

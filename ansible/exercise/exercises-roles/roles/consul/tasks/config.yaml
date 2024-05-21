@@ -28,7 +28,7 @@
 
 - name: Copy Server Config
   ansible.builtin.template:
-    src: server_config.j2
+    src: server_config.hcl.j2
     dest: /etc/consul.d/config.json
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
@@ -38,7 +38,7 @@
   
 - name: Copy client Config
   ansible.builtin.template:
-    src: client_config.j2
+    src: client_config.hcl.j2
     dest: /etc/consul.d/config.json
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
