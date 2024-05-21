@@ -21,11 +21,13 @@
 
 # sudo mkdir -p /opt/cni/bin && \
 # sudo tar -C /opt/cni/bin -xzf cni-plugins.tgz
+# https://developer.hashicorp.com/nomad/docs/configuration/client#cni_path
 - name: Create directory for CNI plugins
   file:
     path: /opt/cni/bin
     state: directory
 
+# https://developer.hashicorp.com/nomad/docs/configuration/client#cni_path
 - name: Extract CNI plugins
   unarchive:
     src: "/tmp/cni-plugins.tgz"

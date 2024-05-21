@@ -1,4 +1,11 @@
+# https://developer.hashicorp.com/nomad/docs/configuration/server
 server {
   enabled = true
   bootstrap_expect = 1
+
+  server_join {
+    retry_join     = {{ nomad_servers }}
+    retry_max      = 3
+    retry_interval = "15s"
+  }
 }

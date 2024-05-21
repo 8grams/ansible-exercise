@@ -12,5 +12,5 @@
     "key_file": "/etc/consul.d/ssl/consul.key",
     "verify_incoming": true,
     "verify_outgoing": true,
-    "retry_join": ["provider=aws tag_key=role tag_value=consul"]
+    "retry_join": ["tag_key=role tag_value=consul"]
 }

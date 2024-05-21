@@ -1,2 +1,53 @@
 datacenter = "dc1"
 data_dir = "/opt/nomad"
+
+# https://developer.hashicorp.com/nomad/docs/configuration/tls
+tls {
+  http = true
+  ca_file = "/etc/nomad.d/ssl/ca.cert"
+  cert_file = "/etc/nomad.d/ssl/consul.cert"
+  key_file = "/etc/nomad.d/ssl/consul.key"
+}
+
+# https://developer.hashicorp.com/nomad/docs/configuration/autopilot
+autopilot {
+  cleanup_dead_servers      = true
+  last_contact_threshold    = "200ms"
+  max_trailing_logs         = 250
+  server_stabilization_time = "10s"
+  enable_redundancy_zones   = false
+  disable_upgrade_migration = false
+  enable_custom_upgrades    = false
+}
+
+# https://developer.hashicorp.com/nomad/docs/configuration/consul
+consul {
+  address = "{{ consul_address }}"
+  ca_file = "/etc/nomad.d/ssl/ca.cert"
+  cert_file = "/etc/nomad.d/ssl/consul.cert"
+  key_file = "/etc/nomad.d/ssl/consul.key"
+  ssl = true
+
+  client_auto_join = true
+  client_service_name = "nomad-client"
+
+  server_auto_join = true
+}
+
+ui {
+  enabled =  true
+ 
+  content_security_policy {
+    connect_src     = ["*"]
+    default_src     = ["'none'"]
+    form_action     = ["'none'"]
+    frame_ancestors = ["'none'"]
+    img_src         = ["'self'","data:"]
+    script_src      = ["'self'"]
+    style_src       = ["'self'","'unsafe-inline'"]
+  }
+ 
+  consul {
+    ui_url = "{{ consul_ui_url }}"
+  }
+}

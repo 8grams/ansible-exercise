@@ -1,3 +1,21 @@
+# https://developer.hashicorp.com/nomad/docs/configuration/client
 client {
   enabled = true
+  node_class = "app"
+  node_pool = "app_pool"
+  servers = {{ nomad_servers }}
+
+  server_join {
+    retry_join     = {{ nomad_servers }}
+    retry_max      = 3
+    retry_interval = "15s"
+  }
+
+  bridge_network_name = "nomad"
+}
+
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
 }

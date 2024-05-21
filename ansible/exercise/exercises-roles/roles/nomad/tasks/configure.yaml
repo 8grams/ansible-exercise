@@ -36,13 +36,31 @@
     dest: /etc/nomad.d/nomad.hcl
 
 - name: Set node as server
-  copy:
+  template:
     src: ./files/server.hcl.template
     dest: /etc/nomad.d/server.hcl
   when: "'nomad_server' in group_names"
 
 - name: Set node as client
-  copy:
+  template:
     src: ./files/client.hcl.template
     dest: /etc/nomad.d/client.hcl
   when: "'nomad_client' in group_names"
+
+- name: Copy Consul Cert Authority File
+  ansible.builtin.copy:
+    src: "./../../../../../../keys/ssl/ca.cert"
+    dest: /etc/nomad.d/ssl/ca.cert
+    backup: yes
+
+- name: Copy Consul Cert File
+  ansible.builtin.copy:
+    src: "./../../../../../../keys/ssl/consul.cert"
+    dest: /etc/nomad.d/ssl/consul.cert
+    backup: yes
+
+- name: Copy Consul Cert Key
+  ansible.builtin.copy:
+    src: "./../../../../../../keys/ssl/consul.key"
+    dest: /etc/nomad.d/ssl/consul.key
+    backup: yes

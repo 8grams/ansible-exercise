@@ -1,7 +1,7 @@
 ---
 - name: Copy Cert Authority File
   ansible.builtin.copy:
-    src: "./../files/ca.cert"
+    src: "./../../../../../../keys/ssl/ca.cert"
     dest: /etc/consul.d/ssl/ca.cert
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
@@ -10,7 +10,7 @@
 
 - name: Copy Cert File
   ansible.builtin.copy:
-    src: "./../files/consul.cert"
+    src: "./../../../../../../keys/ssl/consul.cert"
     dest: /etc/consul.d/ssl/consul.cert
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
@@ -19,7 +19,7 @@
 
 - name: Copy Cert Key
   ansible.builtin.copy:
-    src: "./../files/consul.key"
+    src: "./../../../../../../keys/ssl/consul.key"
     dest: /etc/consul.d/ssl/consul.key
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
