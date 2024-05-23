@@ -82,6 +82,11 @@
   run_once: true
   when: not nomadclientpem.stat.exists
 
+- name: Check if cert already exists in client
+  stat:
+    path: /etc/nomad.d/ssl/nomad-client.pem
+  register: nomadclientpemclient
+
 - name: Fetch certificates from nomad_server
   fetch:
     src: "{{ item }}"
@@ -98,8 +103,9 @@
     - "{{ nomad_client_pem }}"
   delegate_to: "{{ groups['nomad_server'][0] }}"
   run_once: true
+  when: not nomadclientpemclient.stat.exists
 
-- name: Copy certificates to nomad_client
+- name: Copy certificates to all hosts
   copy:
     src: "/tmp/nomad/{{ item }}"
     dest: "{{ item }}"
@@ -115,4 +121,5 @@
     - "{{ nomad_client_key_pem }}"
     - "{{ nomad_client_csr }}"
     - "{{ nomad_client_pem }}"
-  when: "'nomad_client' in group_names"
+  when:
+    - not nomadclientpemclient.stat.exists
