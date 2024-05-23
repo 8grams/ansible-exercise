@@ -6,6 +6,17 @@
 - name: Provision Nomad Cluster
   become: yes
   hosts: nomad
+  vars:
+    cert_days: 365
+    ca_key_pem: /etc/nomad.d/ssl/ca-key.pem
+    ca_pem: /etc/nomad.d/ssl/ca.pem
+    nomad_server_key_pem: /etc/nomad.d/ssl/nomad-server-key.pem
+    nomad_server_csr: /etc/nomad.d/ssl/nomad-server.csr
+    nomad_server_pem: /etc/nomad.d/ssl/nomad-server.pem
+    nomad_client_key_pem: /etc/nomad.d/ssl/nomad-client-key.pem
+    nomad_client_csr: /etc/nomad.d/ssl/nomad-client.csr
+    nomad_client_pem: /etc/nomad.d/ssl/nomad-client.pem
+    openssl_cnf_file: /etc/nomad.d/ssl/openssl.cnf
   roles:
     - nomad
 
@@ -32,6 +43,12 @@
     - never
     - restart
 
+# Set on env vars
+# export NOMAD_ADDR=https://192.168.1.1:4646
+# export NOMAD_TLS_SKIP_VERIFY=true
+# export NOMAD_CACERT=/etc/nomad.d/ssl/ca.pem
+# export NOMAD_CLIENT_CERT=/etc/nomad.d/ssl/nomad-client.pem
+# export NOMAD_CLIENT_KEY=/etc/nomad.d/ssl/nomad-client-key.pem
 - name: Fetch cert file
   become: yes
   hosts: nomad_server
@@ -42,9 +59,9 @@
         dest: "{{ item }}"
         flat: yes
       loop:
-        - /etc/nomad.d/ssl/ca.cert
-        - /etc/nomad.d/ssl/consul.cert
-        - /etc/nomad.d/ssl/consul.key
+        - /etc/nomad.d/ssl/ca.pem
+        - /etc/nomad.d/ssl/nomad-client.pem
+        - /etc/nomad.d/ssl/nomad-client-key.pem
   tags:
     - never
     - fetch_cert

@@ -3,9 +3,33 @@ server {
   enabled = true
   bootstrap_expect = 1
 
-  server_join {
-    retry_join     = {{ nomad_servers | tojson }}
-    retry_max      = 3
-    retry_interval = "15s"
-  }
+  # enable this when using multiple nomad servers
+  # server_join {
+  #   retry_join     = {{ nomad_servers | tojson }}
+  #   retry_max      = 3
+  #   retry_interval = "15s"
+  # }
 }
+
+# https://developer.hashicorp.com/nomad/docs/configuration/tls
+tls {
+  http = true
+  rpc  = true
+  ca_file = "/etc/nomad.d/ssl/ca.pem"
+  cert_file = "/etc/nomad.d/ssl/nomad-server.pem"
+  key_file = "/etc/nomad.d/ssl/nomad-server-key.pem"
+
+  # should set true in production
+  verify_server_hostname = false 
+  # verify_https_client    = true
+}
+
+# # https://developer.hashicorp.com/nomad/docs/configuration/consul
+# consul {
+#   address = "{{ consul_address }}"
+#   ca_file = "/etc/nomad.d/ssl/ca.pem"
+#   cert_file = "/etc/nomad.d/ssl/nomad-client.pem"
+#   key_file = "/etc/nomad.d/ssl/nomad-client-key.pem"
+#   ssl = true
+#   server_auto_join = true
+# }

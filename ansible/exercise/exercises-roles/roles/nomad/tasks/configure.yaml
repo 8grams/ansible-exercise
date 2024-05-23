@@ -56,8 +56,8 @@
 
 - name: Check if OpenSSL Cert exists
   stat:
-    path: /etc/nomad.d/ssl/consul_cert_file
-  register: consulcertconfig
+    path: /etc/nomad.d/ssl/nomad-client.pem
+  register: nomadclientpem
 
 - name: Copy OpenSSL configuration
   template:
@@ -66,18 +66,53 @@
   when: not openssl_config.stat.exists
 
 - name: Generate private key and certificate
-  vars:
-    cert_days: 365
-    consul_key_file: /etc/nomad.d/ssl/consul.key
-    ca_cert_file: /etc/nomad.d/ssl/ca.cert
-    consul_cert_file: /etc/nomad.d/ssl/consul.cert
-    csr_file: /etc/nomad.d/ssl/consul.csr
-    openssl_cnf_file: /etc/nomad.d/ssl/openssl.cnf
   command:
     cmd: "{{ item }}"
   with_items:
-    - openssl req -x509 -nodes -days {{ cert_days }} -newkey rsa:4096 
-      -keyout {{ consul_key_file }} -out {{ consul_cert_file }} -config {{ openssl_cnf_file }}
-    - openssl req -new -key {{ consul_key_file }} -out {{ csr_file }} -config {{ openssl_cnf_file }}
-    - openssl x509 -req -in {{ csr_file }} -CA {{ consul_cert_file }} -CAkey {{ consul_key_file }} -CAcreateserial -out {{ ca_cert_file }} -days {{ cert_days }}
-  when: not consulcertconfig.stat.exists
+    - openssl genpkey -algorithm RSA -out {{ ca_key_pem }}
+    - openssl req -x509 -new -nodes -key {{ ca_key_pem }} -sha256 -days 3650 -out {{ ca_pem }} -subj "/CN={{ nomad_domain }}"
+    - openssl genpkey -algorithm RSA -out {{ nomad_server_key_pem }}
+    - openssl req -new -key {{ nomad_server_key_pem }} -out {{ nomad_server_csr }} -subj "/CN={{ ansible_default_ipv4.address }}"
+    - openssl x509 -req -in {{ nomad_server_csr }} -CA {{ ca_pem }} -CAkey {{ ca_key_pem }} -CAcreateserial -out {{ nomad_server_pem }} -days 365 -extensions v3_req -extfile {{ openssl_cnf_file }}
+
+    - openssl genpkey -algorithm RSA -out {{ nomad_client_key_pem }}
+    - openssl req -new -key {{ nomad_client_key_pem }} -out {{ nomad_client_csr }} -subj "/CN=client"
+    - openssl x509 -req -in {{ nomad_client_csr }} -CA {{ ca_pem }} -CAkey {{ ca_key_pem }} -CAcreateserial -out {{ nomad_client_pem }} -days 365
+  delegate_to: "{{ groups['nomad_server'][0] }}"
+  run_once: true
+  when: not nomadclientpem.stat.exists
+
+- name: Fetch certificates from nomad_server
+  fetch:
+    src: "{{ item }}"
+    dest: "/tmp/nomad/{{ item }}"
+    flat: yes
+  with_items:
+    - "{{ ca_key_pem }}"
+    - "{{ ca_pem }}"
+    - "{{ nomad_server_key_pem }}"
+    - "{{ nomad_server_csr }}"
+    - "{{ nomad_server_pem }}"
+    - "{{ nomad_client_key_pem }}"
+    - "{{ nomad_client_csr }}"
+    - "{{ nomad_client_pem }}"
+  delegate_to: "{{ groups['nomad_server'][0] }}"
+  run_once: true
+
+- name: Copy certificates to nomad_client
+  copy:
+    src: "/tmp/nomad/{{ item }}"
+    dest: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - "{{ ca_key_pem }}"
+    - "{{ ca_pem }}"
+    - "{{ nomad_server_key_pem }}"
+    - "{{ nomad_server_csr }}"
+    - "{{ nomad_server_pem }}"
+    - "{{ nomad_client_key_pem }}"
+    - "{{ nomad_client_csr }}"
+    - "{{ nomad_client_pem }}"
+  when: "'nomad_client' in group_names"
