@@ -10,7 +10,7 @@ tls {
   cert_file = "/etc/nomad.d/ssl/consul.cert"
   key_file = "/etc/nomad.d/ssl/consul.key"
 
-  verify_server_hostname = true
+  verify_server_hostname = false # should set true in production
   verify_https_client    = true
 }
 

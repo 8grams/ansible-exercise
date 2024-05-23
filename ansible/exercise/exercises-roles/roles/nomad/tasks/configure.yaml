@@ -47,20 +47,37 @@
     dest: /etc/nomad.d/client.hcl
   when: "'nomad_client' in group_names"
 
-- name: Copy Consul Cert Authority File
-  ansible.builtin.copy:
-    src: "./../../../../../../keys/ssl/ca.cert"
-    dest: /etc/nomad.d/ssl/ca.cert
-    backup: yes
+# Used by consul as well
 
-- name: Copy Consul Cert File
-  ansible.builtin.copy:
-    src: "./../../../../../../keys/ssl/consul.cert"
-    dest: /etc/nomad.d/ssl/consul.cert
-    backup: yes
+- name: Check if OpenSSL configuration exists
+  stat:
+    path: /etc/nomad.d/ssl/openssl.cnf
+  register: openssl_config
 
-- name: Copy Consul Cert Key
-  ansible.builtin.copy:
-    src: "./../../../../../../keys/ssl/consul.key"
-    dest: /etc/nomad.d/ssl/consul.key
-    backup: yes
+- name: Check if OpenSSL Cert exists
+  stat:
+    path: /etc/nomad.d/ssl/consul_cert_file
+  register: consulcertconfig
+
+- name: Copy OpenSSL configuration
+  template:
+    src: ./files/openssl.cnf.j2
+    dest: /etc/nomad.d/ssl/openssl.cnf
+  when: not openssl_config.stat.exists
+
+- name: Generate private key and certificate
+  vars:
+    cert_days: 365
+    consul_key_file: /etc/nomad.d/ssl/consul.key
+    ca_cert_file: /etc/nomad.d/ssl/ca.cert
+    consul_cert_file: /etc/nomad.d/ssl/consul.cert
+    csr_file: /etc/nomad.d/ssl/consul.csr
+    openssl_cnf_file: /etc/nomad.d/ssl/openssl.cnf
+  command:
+    cmd: "{{ item }}"
+  with_items:
+    - openssl req -x509 -nodes -days {{ cert_days }} -newkey rsa:4096 
+      -keyout {{ consul_key_file }} -out {{ consul_cert_file }} -config {{ openssl_cnf_file }}
+    - openssl req -new -key {{ consul_key_file }} -out {{ csr_file }} -config {{ openssl_cnf_file }}
+    - openssl x509 -req -in {{ csr_file }} -CA {{ consul_cert_file }} -CAkey {{ consul_key_file }} -CAcreateserial -out {{ ca_cert_file }} -days {{ cert_days }}
+  when: not consulcertconfig.stat.exists

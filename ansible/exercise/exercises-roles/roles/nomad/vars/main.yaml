@@ -5,7 +5,8 @@ docker_group: docker
 docker_users:
   - ubuntu
 
-nomad_servers: ["192.168.0.0.1"]
+nomad_servers: ["192.168.0.1"]
+nomad_domain: "192.168.0.1"
 
 # https://developer.hashicorp.com/nomad/docs/configuration/consul
 # configure nomad agent to talk with consul in the same host

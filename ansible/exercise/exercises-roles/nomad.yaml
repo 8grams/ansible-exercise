@@ -3,8 +3,48 @@
 # - sudo systemctl daemon-reload
 
 # ansible-playbook nomad.yaml
-- name: Privision Nomad Cluster
+- name: Provision Nomad Cluster
   become: yes
   hosts: nomad
   roles:
     - nomad
+
+- name: Reload Daemon
+  become: yes
+  hosts: nomad
+  tasks:
+    - name: Reload systemd daemon
+      systemd:
+        daemon_reload: yes
+  tags:
+    - never
+    - reload
+
+- name: Restart Nomad
+  become: yes
+  hosts: nomad
+  tasks:
+    - name: Reset systemd daemon
+      systemd:
+        name: nomad
+        state: restarted
+  tags:
+    - never
+    - restart
+
+- name: Fetch cert file
+  become: yes
+  hosts: nomad_server
+  tasks:
+    - name: Fetch files
+      fetch:
+        src: "{{ item }}"
+        dest: "{{ item }}"
+        flat: yes
+      loop:
+        - /etc/nomad.d/ssl/ca.cert
+        - /etc/nomad.d/ssl/consul.cert
+        - /etc/nomad.d/ssl/consul.key
+  tags:
+    - never
+    - fetch_cert

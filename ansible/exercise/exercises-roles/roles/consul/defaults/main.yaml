@@ -8,4 +8,4 @@ consul_start: true
 # should be vault-ed
 consul_encryptkey: "E2y7K92PiKKbfGdoZvSi"
 
-consul_servers: ["192.168.0.0.1"]
+consul_servers: ["192.168.1.1:8500"]
