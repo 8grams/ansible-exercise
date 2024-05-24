@@ -1,0 +1,14 @@
+galaxy_info:
+  author: Glend Maatita
+  description: Provision Load Balancer using Fabio and Nginx
+  company: OnXP
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - jammy
+
+  galaxy_tags: ["consul", "nomad", "fabio", "nginx", "cluster", "hashicorp"]

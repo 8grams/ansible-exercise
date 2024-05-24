@@ -1,0 +1,22 @@
+---
+# tasks file for fabio
+
+- include_tasks: debian.yaml
+  when: 
+    - ansible_os_family == 'Debian'
+    - "'nginx_server' in group_names"
+
+- include_tasks: fabio.yaml
+  when: 
+    - ansible_os_family == 'Debian'
+    - "'fabio_server' in group_names"
+
+- include_tasks: nginx.yaml
+  when: 
+    - ansible_os_family == 'Debian'
+    - "'nginx_server' in group_names"
+
+- include_tasks: certbot.yaml
+  when: 
+    - ansible_os_family == 'Debian'
+    - "'nginx_server' in group_names"

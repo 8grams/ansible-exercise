@@ -1,0 +1,18 @@
+upstream fabio_servers {
+    {% for host in groups['fabio_server'] %}
+    server {{ hostvars[host]['ansible_host'] }}:9999;
+    {% endfor %}
+}
+
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        proxy_pass http://fabio_servers;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

@@ -1,0 +1,5 @@
+---
+# vars file for fabio
+fabio_version: "1.6.3"
+public_url: ["nomad.onxp.net"]
+author_email: glend@onxp.net

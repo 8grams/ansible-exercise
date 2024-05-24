@@ -1,0 +1,36 @@
+---
+- name: Gather facts
+  setup:
+    filter: ansible_architecture
+
+- name: Set fabio_arch variable
+  set_fact:
+    fabio_arch: "{{ 'linux_amd64' if ansible_architecture == 'x86_64' else '386' }}"
+
+- name: Download Fabio
+  get_url:
+    url: "https://github.com/fabiolb/fabio/releases/download/v{{ fabio_version }}/fabio-{{ fabio_version }}-{{ fabio_arch }}"
+    dest: /usr/bin/fabio
+    mode: '0755'
+
+- name: Set Fabio directory
+  ansible.builtin.file:
+    path: /etc/fabio
+    state: directory
+    mode: '0755'
+
+- name: Create Fabio configuration file
+  copy:
+    src: ./../files/fabio.properties
+    dest: /etc/fabio/fabio.properties
+
+- name: Create Fabio services file
+  copy:
+    src: ./../files/fabio.service
+    dest: /etc/systemd/system/fabio.service
+
+- name: Enable and start Fabio service
+  systemd:
+    name: fabio
+    enabled: yes
+    state: started

@@ -86,3 +86,12 @@
   tags:
     - never
     - restart_consul
+
+- name: Provision Fabio and Nginx
+  become: yes
+  hosts: load_balancer
+  roles:
+    - fabio
+  tags:
+    - never
+    - fabio

@@ -1,0 +1,10 @@
+[Unit]
+Description=Fabio
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/fabio -cfg /etc/fabio/fabio.properties
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

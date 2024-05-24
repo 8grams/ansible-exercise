@@ -5,7 +5,7 @@ docker_group: docker
 docker_users:
   - ubuntu
 
-nomad_servers: ["192.168.0.1"]
+nomad_servers: ["192.168.1.1"]
 nomad_domain: "example.com"
 
 # https://developer.hashicorp.com/nomad/docs/configuration/consul
