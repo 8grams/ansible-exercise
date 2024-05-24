@@ -1,22 +1,4 @@
 ---
-
-- name: Create Configuration Directories
-  ansible.builtin.file:
-    path: /etc/consul.d
-    owner: "{{ consul_user }}"
-    group: "{{ consul_group }}"
-    mode: 0750
-    state: directory
-
-- name: Create ssl Directories
-  ansible.builtin.file:
-    path: /etc/consul.d/ssl
-    owner: "{{ consul_user }}"
-    group: "{{ consul_group }}"
-    mode: 0750
-    state: directory
-
-
 - name: Create Consul Data Directory
   ansible.builtin.file:
     path: /var/consul

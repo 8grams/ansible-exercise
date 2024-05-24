@@ -12,25 +12,31 @@
     home: /etc/nomad.d
     shell: /bin/false
 
-- name: Create Nomad config
+- name: Create Nomad Server config
   copy:
     src: ./files/nomad.service.server
     dest: /etc/systemd/system/nomad.service
   when: "'nomad_server' in group_names"
 
-- name: Create Nomad config
+- name: Create Nomad Client config
   copy:
     src: ./files/nomad.service.client
     dest: /etc/systemd/system/nomad.service
   when: "'nomad_client' in group_names"
 
-- name: Set common config
+- name: Set Permission directory
+  ansible.builtin.file:
+    path: /etc/nomad.d
+    state: directory
+    mode: '0755'
+
+- name: Set SSL directory
   ansible.builtin.file:
     path: /etc/nomad.d/ssl
     state: directory
-    mode: '0700'
+    mode: '0755'
 
-- name: Set datacenter
+- name: Set common config
   template:
     src: ./files/nomad.hcl.j2
     dest: /etc/nomad.d/nomad.hcl
@@ -123,3 +129,9 @@
     - "{{ nomad_client_pem }}"
   when:
     - not nomadclientpemclient.stat.exists
+
+- name: Change SSL directory permissions
+  ansible.builtin.file:
+    path: /etc/nomad.d/ssl
+    mode: '0755'
+    recurse: yes

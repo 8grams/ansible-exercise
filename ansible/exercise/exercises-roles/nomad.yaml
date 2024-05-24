@@ -65,3 +65,24 @@
   tags:
     - never
     - fetch_cert
+
+- name: Privision Consul Cluster
+  become: yes
+  hosts: consul
+  roles:
+    - consul
+  tags:
+    - never
+    - consul
+
+- name: Restart Consul
+  become: yes
+  hosts: consul
+  tasks:
+    - name: Reset systemd daemon
+      systemd:
+        name: consul
+        state: restarted
+  tags:
+    - never
+    - restart_consul

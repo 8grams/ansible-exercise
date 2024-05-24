@@ -1,26 +1,8 @@
 ---
-- name: Copy Cert Authority File
-  ansible.builtin.copy:
-    src: "./../../../../../../keys/ssl/ca.cert"
-    dest: /etc/consul.d/ssl/ca.cert
-    owner: "{{ consul_user }}"
-    group: "{{ consul_group }}"
-    mode: 0640
-    backup: yes
-
-- name: Copy Cert File
-  ansible.builtin.copy:
-    src: "./../../../../../../keys/ssl/consul.cert"
-    dest: /etc/consul.d/ssl/consul.cert
-    owner: "{{ consul_user }}"
-    group: "{{ consul_group }}"
-    mode: 0640
-    backup: yes
-
-- name: Copy Cert Key
-  ansible.builtin.copy:
-    src: "./../../../../../../keys/ssl/consul.key"
-    dest: /etc/consul.d/ssl/consul.key
+- name: Copy Common Config
+  ansible.builtin.template:
+    src: consul.hcl.j2
+    dest: /etc/consul.d/consul.hcl
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
     mode: 0640
@@ -28,8 +10,8 @@
 
 - name: Copy Server Config
   ansible.builtin.template:
-    src: server_config.hcl.j2
-    dest: /etc/consul.d/config.json
+    src: server.hcl.j2
+    dest: /etc/consul.d/server.hcl
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
     mode: 0640
@@ -38,8 +20,8 @@
   
 - name: Copy client Config
   ansible.builtin.template:
-    src: client_config.hcl.j2
-    dest: /etc/consul.d/config.json
+    src: client.hcl.j2
+    dest: /etc/consul.d/client.hcl
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
     mode: 0640

@@ -6,6 +6,7 @@ consul_version: "1.18.1"
 consul_start: true
 
 # should be vault-ed
-consul_encryptkey: "E2y7K92PiKKbfGdoZvSi"
+# generate with `consul keygen`
+consul_encryptkey: "JWl3tmFfcLK5G1e5QH5Ggn4CYum4wnox8YDjR9SaE7o="
 
-consul_servers: ["192.168.1.1:8500"]
+consul_servers: ["192.168.1.1"]

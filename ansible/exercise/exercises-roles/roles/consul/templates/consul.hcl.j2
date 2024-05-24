@@ -1,0 +1,27 @@
+# General settings
+bootstrap = false
+datacenter = "{{ consul_datacenter }}"
+data_dir = "/var/consul"
+encrypt = "{{ consul_encryptkey }}"
+log_level = "{{ consul_loglevel }}"
+enable_syslog = true
+node_name = "{{ inventory_hostname }}"
+
+# https://developer.hashicorp.com/consul/docs/agent/config/config-files#autopilot
+autopilot {
+  cleanup_dead_servers      = true
+  last_contact_threshold    = "200ms"
+  max_trailing_logs         = 250
+  server_stabilization_time = "10s"
+}
+
+# https://developer.hashicorp.com/consul/docs/agent/config/config-files#http_config
+http_config {
+  response_headers {
+    Access-Control-Allow-Origin = "*"
+  }
+}
+
+# Network settings
+bind_addr = "{{ ansible_default_ipv4.address }}"
+client_addr = "0.0.0.0"
