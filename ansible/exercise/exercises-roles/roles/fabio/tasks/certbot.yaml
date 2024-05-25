@@ -5,7 +5,7 @@
     state: present
 
 - name: Generate Let's Encrypt certificate
-  command: "certbot --nginx -d {{ public_url_params }} --email {{ author_email }} --agree-tos --no-eff-email"
+  command: "certbot --nginx -d {{ public_url_params }} --email {{ author_email }} --agree-tos --no-eff-email --renew-by-default"
   vars:
     public_url_params: "{{ public_url | join(' -d ') }}"
 

@@ -2,6 +2,11 @@
 # - systemctl status nomad
 # - sudo systemctl daemon-reload
 
+# it's recommended to use firefox since security feature in chrome restricts the access to the ui.
+# nomad ui  https://192.168.1.1:4646/ui
+# consul ui  http://192.168.1.1:8500/ui
+# fabio ui  http://192.168.1.1:9998/ui
+
 # ansible-playbook nomad.yaml
 - name: Provision Nomad Cluster
   become: yes
@@ -95,3 +100,28 @@
   tags:
     - never
     - fabio
+
+- name: Restart Nginx
+  become: yes
+  hosts: nginx_server
+  tasks:
+    - name: Restart Nginx service
+      service:
+        name: nginx
+        state: restarted
+  tags:
+    - never
+    - restart_nginx
+
+- name: Restart Fabio
+  become: yes
+  hosts: fabio_server
+  tasks:
+    - name: Restart Fabio
+      systemd:
+        name: fabio
+        enabled: yes
+        state: restarted
+  tags:
+    - never
+    - restart_fabio
