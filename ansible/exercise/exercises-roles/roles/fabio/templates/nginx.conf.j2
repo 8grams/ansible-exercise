@@ -12,14 +12,14 @@ server {
         proxy_pass http://fabio_servers;
         include /etc/nginx/includes/proxy.conf;
     }
+}
 
-    location /nomad {
-        proxy_pass http://fabio_servers/nomad;
-        include /etc/nginx/includes/proxy.conf;
-    }
+server {
+    listen 80;
+    server_name basic.nomad.onxp.net;
 
-    location /consul {
-        proxy_pass http://fabio_servers/consul;
+    location / {
+        proxy_pass http://fabio_servers/basic;
         include /etc/nginx/includes/proxy.conf;
     }
 }

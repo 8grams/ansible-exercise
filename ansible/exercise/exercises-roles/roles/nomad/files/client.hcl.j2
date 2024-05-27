@@ -26,10 +26,12 @@ tls {
 # https://developer.hashicorp.com/nomad/docs/configuration/consul
 consul {
   address = "{{ consul_address }}"
-  ca_file = "/etc/nomad.d/ssl/ca.pem"
-  cert_file = "/etc/nomad.d/ssl/nomad-client.pem"
-  key_file = "/etc/nomad.d/ssl/nomad-client-key.pem"
-  ssl = true
-  client_auto_join = true
-  client_service_name = "nomad-client"
+
+  # enable this when using consul with tls on remote server
+  # ca_file = "/etc/nomad.d/ssl/ca.pem"
+  # cert_file = "/etc/nomad.d/ssl/nomad-client.pem"
+  # key_file = "/etc/nomad.d/ssl/nomad-client-key.pem"
+  # ssl = true
+  # client_auto_join = true
+  # client_service_name = "nomad-client"
 }
