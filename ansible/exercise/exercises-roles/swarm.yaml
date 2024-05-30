@@ -1,6 +1,9 @@
-# ansible-playbook docker.yaml
+# ansible-playbook swarm.yaml
+# commands:
+# - to get info: docker info
+# - to get nodes: docker node ls
 - name: Privision Docker Swarm Cluster
   become: yes
-  hosts: all_hosts
+  hosts: swarm
   roles:
     - swarm
