@@ -9,8 +9,8 @@ galaxy_info:
   reference: https://docs.rke2.io/
 
   platforms:
-  - name: Ubuntu
+  - name: openSUSE 
     versions:
-    - jammy
+    - Leap 15.5
 
   galaxy_tags: ["rke", "rke2", "cluster", "rancher"]

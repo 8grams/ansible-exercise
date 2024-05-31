@@ -1,0 +1,14 @@
+# install docker
+- name: Install Docker
+  zypper:
+    name: 
+      - docker
+    state: present
+
+- name: Start Docker
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- include_tasks: user.yaml

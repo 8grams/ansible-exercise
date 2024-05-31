@@ -1,2 +1,18 @@
 ---
 # tasks file for rke
+
+- include_tasks: suse.yaml
+  when: ansible_os_family == 'Suse'
+
+- include_tasks: docker.yaml
+  when: ansible_os_family == 'Suse'
+
+- include_tasks: master.yaml
+  when: 
+    - ansible_os_family == 'Suse'
+    - "'rke_master' in group_names"
+
+- include_tasks: worker.yaml
+  when: 
+    - ansible_os_family == 'Suse'
+    - "'rke_worker' in group_names"

@@ -1,0 +1,27 @@
+- name: Install RKE2 for Worker
+  ansible.builtin.shell: curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
+
+- name: Enable RKE2 worker service
+  ansible.builtin.systemd:
+    name: rke2-agent.service
+    enabled: yes
+
+- name: Create directory for RKE config
+  ansible.builtin.file:
+    path: /etc/rancher/rke2/
+    state: directory
+
+- name: Set rke2 token
+  vars:
+    rke_token: "{{ hostvars[groups['rke_master'][0]]['rke_token'] }}"
+    rke_master_ip: "{{ hostvars[groups['rke_master'][0]]['rke_master_ip'] }}"
+  ansible.builtin.template:
+    src: worker.config.j2
+    dest: /etc/rancher/rke2/config.yaml
+    mode: 0755
+    backup: yes
+
+- name: Start RKE2 server service
+  ansible.builtin.systemd:
+    name: rke2-agent.service
+    state: started

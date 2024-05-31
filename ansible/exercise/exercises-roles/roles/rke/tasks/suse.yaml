@@ -1,0 +1,22 @@
+# - name: Create directory for NetworkManager config
+#   ansible.builtin.file:
+#     path: /etc/NetworkManager/conf.d
+#     state: directory
+
+# - name: Create /etc/NetworkManager/conf.d/rke2-canal.conf
+#   copy:
+#     src: ./files/rke2-canal.conf
+#     dest: /etc/NetworkManager/conf.d/rke2-canal.conf
+#     owner: root
+#     group: root
+#     mode: '0644'
+
+# - name: Reload NetworkManager
+#   ansible.builtin.systemd:
+#     name: NetworkManager
+#     state: reloaded
+
+- name: Install apparmor-parser
+  ansible.builtin.zypper:
+    name: ["apparmor-parser", "curl"]
+    state: present

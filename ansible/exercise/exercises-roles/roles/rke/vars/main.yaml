@@ -1,2 +1,5 @@
 ---
 # vars file for rke
+docker_group: docker
+docker_users:
+  - suse
