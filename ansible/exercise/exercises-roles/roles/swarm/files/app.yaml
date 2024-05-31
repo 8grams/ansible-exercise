@@ -1,0 +1,12 @@
+- name: exercise-app
+  image: glendmaatita/exercise-app:latest
+  replicas: 5
+  publish:
+    published: 3001
+    target: 3000
+- name: small-app
+  image: glendmaatita/exercise-app:latest
+  replicas: 2
+  publish:
+    published: 3002
+    target: 3000

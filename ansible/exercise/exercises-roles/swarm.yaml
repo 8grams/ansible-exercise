@@ -2,6 +2,11 @@
 # commands:
 # - to get info: docker info
 # - to get nodes: docker node ls
+
+
+# Install application
+# - docker service create --name exercise-app --replicas 5 --publish published=3001,target=3000 glendmaatita/exercise-app:latest
+# - docker service ls
 - name: Privision Docker Swarm Cluster
   become: yes
   hosts: swarm
