@@ -1,2 +1,5 @@
 ---
 # defaults file for swarm
+
+public_url: exercise.swarm.onxp.net
+author_email: glend.maatita@gmail.com 

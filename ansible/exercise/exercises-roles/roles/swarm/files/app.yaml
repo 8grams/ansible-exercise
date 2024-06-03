@@ -1,12 +1,13 @@
-- name: exercise-app
-  image: glendmaatita/exercise-app:latest
-  replicas: 5
-  publish:
-    published: 3001
-    target: 3000
-- name: small-app
-  image: glendmaatita/exercise-app:latest
-  replicas: 2
-  publish:
-    published: 3002
-    target: 3000
+version: '3.8'
+services:
+  exercise-app:
+    image: glendmaatita/exercise-app:latest
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "3000:3000"
+    environment:
+      - ENV_VAR1=value1
+      - ENV_VAR2=value2

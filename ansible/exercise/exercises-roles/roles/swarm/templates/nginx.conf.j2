@@ -1,0 +1,15 @@
+upstream exercise_backend {
+    {% for host in groups['swarm_node'] %}
+    server {{ hostvars[host]['ansible_host'] }}:3000;
+    {% endfor %}
+}
+
+server {
+    listen 80;
+    server_name {{ public_url }};
+
+    location / {
+        proxy_pass http://exercise_backend;
+        include /etc/nginx/includes/proxy.conf;
+    }
+}

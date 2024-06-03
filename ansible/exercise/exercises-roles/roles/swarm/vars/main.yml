@@ -1,7 +1,7 @@
 ---
 # vars file for swarm
 app_path: /app
-public_url: swarm.bootcamp.onxp.net
+nginx_conf_path: /etc/nginx/includes
 author_email: glend@onxp.net
 docker_version: 5:26.1.0-1~ubuntu.22.04~jammy
 docker_group: docker

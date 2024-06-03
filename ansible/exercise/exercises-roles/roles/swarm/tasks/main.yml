@@ -1,7 +1,9 @@
 ---
 # tasks file for swarm
 - include_tasks: docker.yaml
-  when: ansible_os_family == 'Debian'
+  when: 
+    - ansible_os_family == 'Debian'
+    - "'swarm_node' in group_names"
 
 - include_tasks: manager.yaml
   when: 
@@ -13,12 +15,18 @@
     - ansible_os_family == 'Debian'
     - "'swarm_worker' in group_names"
 
-# - include_tasks: app.yaml
-#   when: ansible_os_family == 'Debian'
+- include_tasks: app.yaml
+  when: 
+    - ansible_os_family == 'Debian'
+    - "'swarm_manager' in group_names"
 
-# - include_tasks: nginx.yaml
-#   when: ansible_os_family == 'Debian'
+- include_tasks: nginx.yaml
+  when: 
+    - ansible_os_family == 'Debian'
+    - "'nginx_server' in group_names"
 
-# - include_tasks: certbot.yaml
-#   when: ansible_os_family == 'Debian'
+- include_tasks: certbot.yaml
+  when: 
+    - ansible_os_family == 'Debian'
+    - "'nginx_server' in group_names"
 

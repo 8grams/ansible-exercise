@@ -1,0 +1,7 @@
+- name: Upload stack file
+  copy:
+    src: ./../files/app.yaml
+    dest: /tmp/app.yaml
+- name: Install example app
+  command: docker stack deploy --compose-file /tmp/app.yaml exercise-app
+  run_once: true
