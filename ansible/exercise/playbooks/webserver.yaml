@@ -2,6 +2,7 @@
 # To validate tasks: ansible-playbook webserver.yaml --check
 # To test: curl -v http://exercise.dev
 # Run specific tasks based on tags: ansible-playbook webserver.yaml --tags check
+# Run multiple tags: ansible-playbook webserver.yaml --tags install,check
 
 # Controlling the order of tasks
 # Run tasks start from a specific tasks: ansible-playbook webserver.yaml --start-at-task="Gather facts about nginx service"

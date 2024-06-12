@@ -1,7 +1,7 @@
 # Run all tasks: ansible-playbook loop.yaml
 # using loops to install multiple packages
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_loops.html
-- name: Install docker, docker-compose, git, 
+- name: Install docker, docker-compose, git
   become: yes
   hosts: ubuntu
   vars:
