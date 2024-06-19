@@ -7,14 +7,18 @@
 
 - name: Init k3s cluster
   ansible.builtin.shell: |
-    curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_token }} sh -s - server --cluster-init --tls-san={{ cluster_ha_registration_addres }}
+    curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_token }} sh -s - server --cluster-init --tls-san={{ cluster_ha_registration_address }}
   args:
     executable: /bin/bash
-  when: cluster_ha_enabled | bool
+  when: 
+    - cluster_ha_enabled | bool
+    - ansible_default_ipv4.address ==  cluster_ha_registration_address
 
 - name: Join k3s server
   ansible.builtin.shell: |
-    curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_token }} sh -s - server --server  --cluster-init --tls-san={{ cluster_ha_registration_addres }}
+    curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_token }} sh -s - server --server  --cluster-init --tls-san={{ cluster_ha_registration_address }}
   args:
     executable: /bin/bash
-  when: cluster_ha_enabled | bool
+  when: 
+    - cluster_ha_enabled | bool
+    - ansible_default_ipv4.address !=  cluster_ha_registration_address

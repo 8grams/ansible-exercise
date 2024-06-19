@@ -1,0 +1,10 @@
+upstream fabio_servers {
+    {% for host in groups['k3s_master'] %}
+    server {{ hostvars[host]['ansible_host'] }}:6443;
+    {% endfor %}
+}
+
+server {
+    listen 6443;
+    proxy_pass k3s_servers;
+}

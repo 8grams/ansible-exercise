@@ -1,5 +1,7 @@
+# used as load balancer
+
 ---
-- name: Update apt and install necessary packages
+- name: Install nginx
   apt:
     update_cache: yes
     name: ['nginx']
@@ -7,7 +9,7 @@
 
 - name: Override nginx conf
   template:
-    src: ./../templates/nginx.conf.j2
+    src: nginx.conf.j2
     dest: /etc/nginx/conf.d/default.conf
 
 - name: Prepare nginx conf directory

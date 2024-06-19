@@ -4,5 +4,5 @@
 - name: Update apt and install necessary packages
   apt:
     update_cache: yes
-    name: ['apt-transport-https', 'ca-certificates', 'curl', 'gnupg-agent', 'software-properties-common', 'wget', 'zip', 'nginx']
+    name: ['apt-transport-https', 'ca-certificates', 'curl', 'gnupg-agent', 'software-properties-common', 'wget', 'zip']
     state: present
