@@ -1,0 +1,16 @@
+
+galaxy_info:
+  role_name: rke
+  author: Glend Maatita
+  description: Create K3s CLuster
+  company: OnXP
+  license: MIT
+  min_ansible_version: "2.1"
+  reference: https://docs.k3s.io/
+
+  platforms:
+  - name: openSUSE 
+    versions:
+    - Leap 15.5
+
+  galaxy_tags: ["k3s", "cluster"]
