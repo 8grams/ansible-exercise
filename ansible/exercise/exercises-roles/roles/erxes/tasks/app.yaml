@@ -3,5 +3,5 @@
 - include_tasks: directory.yaml
   when: ansible_os_family == 'Debian'
 
-- include_tasks: composer.yaml
+- include_tasks: erxes.yaml
   when: ansible_os_family == 'Debian'

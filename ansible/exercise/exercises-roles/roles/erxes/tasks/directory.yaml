@@ -1,16 +1,16 @@
 ---
 
-- name: Prepare directory
+- name: Prepare base directory
   file:
     path: "{{ app_path }}"
+    state: directory
+
+- name: Prepare locales directory
+  file:
+    path: "{{ app_path }}/locales"
     state: directory
 
 - name: Prepare nginx conf directory
   file:
     path: "{{ nginx_conf_path }}"
     state: directory
-
-- name: Copy docker compose file
-  copy:
-    src: ./../files/app/docker-compose.yaml
-    dest: "{{ app_path }}/docker-compose.yaml"

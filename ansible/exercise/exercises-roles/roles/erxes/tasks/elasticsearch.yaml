@@ -1,0 +1,10 @@
+---
+
+- name: Add essyncer and elasticsearch objects to configs.yaml
+  community.general.json_modify:
+    path: "{{ app_path }}/configs.json"
+    action: add
+    pretty: yes
+    content:
+      essyncer: {}
+      elasticsearch: {}

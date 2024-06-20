@@ -1,0 +1,18 @@
+---
+
+- name: Scaffold new erxes application
+  ansible.builtin.command:
+    cmd: create-erxes-app erxes
+  args:
+    chdir: {{ app_path }}
+
+- name: Update version in JSON file
+  community.general.json_modify:
+    path: "/opt/erxes/package.json"
+    pointer: "/version"
+    update: {{ app_version }}
+
+- name: Run npm install in the erxes directory
+  ansible.builtin.shell:
+    cmd: npm install
+    chdir: {{ app_path }}
