@@ -1,0 +1,6 @@
+# ansible-playbook rke.yaml
+- name: Privision RKE Cluster
+  become: yes
+  hosts: k3s_nodes
+  roles:
+    - k3s

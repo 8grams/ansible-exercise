@@ -1,0 +1,22 @@
+# install dependencies
+
+---
+- name: Install NVM (Node Version Manager)
+  ansible.builtin.shell:
+    cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+  args:
+    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+
+- name: Add NodeSource Node.js 18.x repo
+  ansible.builtin.shell:
+    cmd: curl -sL https://deb.nodesource.com/setup_18.x | sudo bash
+
+- name: Install Node.js
+  ansible.builtin.apt:
+    name: nodejs
+    state: present
+    update_cache: yes
+
+- name: Install create-erxes-app globally
+  ansible.builtin.shell:
+    cmd: npm install -g create-erxes-app
