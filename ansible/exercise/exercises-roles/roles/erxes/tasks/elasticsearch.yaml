@@ -8,3 +8,23 @@
     content:
       essyncer: {}
       elasticsearch: {}
+
+- name: Run npm command to deploy databases for erxes
+  ansible.builtin.shell:
+    cmd: npm run erxes deploy-dbs
+    chdir: "{{ app_path }}"
+
+- name: Read MongoDB password from configs.json
+  ansible.builtin.slurp:
+    src: "{{ app_path }}/configs.json"
+  register: configs_content
+
+- name: Set MongoDB password as a fact
+  ansible.builtin.set_fact:
+    mongodb_password: "{{ (configs_content['content'] | b64decode | from_json)['mongodb']['password'] }}"
+
+- name: Execute MongoDB command inside the Docker container
+  community.docker.docker_container_exec:
+    container: "mongo-0"  # Replace with your MongoDB container name
+    command: >
+      bash -c "echo 'rs.initiate();' | mongo -u erxes -p {{ mongodb_password }}"  
