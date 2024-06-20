@@ -1,1 +1,10 @@
-#
+# to run: vagrant up
+# Vagrant will create ssh key pair on ~/.vagrant.d/insecure_private_keys/vagrant.key.rsa
+# ssh to vagrant: vagrant ssh
+# manual ssh ssh -i ~/.vagrant.d/insecure_private_keys/vagrant.key.rsa vagrant@localhost -p 2222
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "ubuntu/jammy64"
+    config.vm.network "private_network", type: "dhcp"
+    config.ssh.insert_key = false # do not generate new key pair
+  end
