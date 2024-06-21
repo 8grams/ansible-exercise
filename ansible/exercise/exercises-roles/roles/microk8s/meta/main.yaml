@@ -1,7 +1,7 @@
 galaxy_info:
-  role_name: nomad
+  role_name: microk8s
   author: Glend Maatita
-  description: Create Nomad CLuster
+  description: Create Multi-Node MicroK8s Cluster
   company: OnXP
   license: MIT
   min_ansible_version: "2.1"
