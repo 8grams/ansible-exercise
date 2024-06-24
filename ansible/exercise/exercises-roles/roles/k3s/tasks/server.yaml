@@ -1,24 +1,24 @@
 - name: Install k3s server
   ansible.builtin.shell: |
-    curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL={{ channel }} INSTALL_K3S_EXEC="server" K3S_TOKEN={{ k3s_token }} sh -s -
+    curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL={{ channel }} INSTALL_K3S_EXEC="server" K3S_TOKEN={{ k3s_token }} sh -s - --tls-san={{ ansible_host }}
   args:
     executable: /bin/bash
   when: not cluster_ha_enabled | bool
 
 - name: Init k3s cluster
   ansible.builtin.shell: |
-    curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_token }} sh -s - server --cluster-init --tls-san={{ cluster_ha_registration_address }}
+    curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_token }} sh -s - server --cluster-init --tls-san={{ hostvars[groups['k3s_master'][0]]['ansible_host'] }}
   args:
     executable: /bin/bash
   when: 
     - cluster_ha_enabled | bool
-    - ansible_default_ipv4.address ==  cluster_ha_registration_address
+    - ansible_default_ipv4.address ==  hostvars[groups['k3s_master'][0]]['ansible_host']
 
 - name: Join k3s server
   ansible.builtin.shell: |
-    curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_token }} sh -s - server --server  --cluster-init --tls-san={{ cluster_ha_registration_address }}
+    curl -sfL https://get.k3s.io | K3S_TOKEN={{ k3s_token }} sh -s - server --server  --cluster-init --tls-san={{ hostvars[groups['k3s_master'][0]]['ansible_host'] }}
   args:
     executable: /bin/bash
   when: 
     - cluster_ha_enabled | bool
-    - ansible_default_ipv4.address !=  cluster_ha_registration_address
+    - ansible_default_ipv4.address !=  hostvars[groups['k3s_master'][0]]['ansible_host']

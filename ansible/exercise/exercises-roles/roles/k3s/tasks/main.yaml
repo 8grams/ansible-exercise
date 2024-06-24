@@ -1,7 +1,6 @@
 ---
 # tasks file for k3s
 # install docker
-- include_tasks: system.yaml
 
 - include_tasks: server.yaml
   when: "'k3s_master' in group_names"
@@ -11,4 +10,6 @@
 
 - include_tasks: nginx.yaml
   when: "'k3s_lb' in group_names"
+
+# - include_tasks: system.yaml
 

@@ -1,9 +1,7 @@
 ---
 # vars file for k3s
 k3s_token: LuFXxR28PyMgiDkhMlil8v7yOLHmYG6PgUjzbwdd
-k3s_server_url: https://k3s.ansible.bootcamp.onxp.net:6443
 channel: stable
 
 # enable HA cluster. Reference: https://docs.k3s.io/datastore/ha-embedded
 cluster_ha_enabled: false
-cluster_ha_registration_addres: 192.168.4.1

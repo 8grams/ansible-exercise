@@ -1,4 +1,4 @@
-upstream fabio_servers {
+upstream k3s_servers {
     {% for host in groups['k3s_master'] %}
     server {{ hostvars[host]['ansible_host'] }}:6443;
     {% endfor %}
@@ -6,5 +6,8 @@ upstream fabio_servers {
 
 server {
     listen 6443;
-    proxy_pass k3s_servers;
+    location / {
+        proxy_pass http://k3s_servers;
+        include /etc/nginx/includes/proxy.conf;
+    }
 }
