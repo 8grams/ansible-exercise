@@ -28,3 +28,8 @@
     container: "mongo-0"  # Replace with your MongoDB container name
     command: >
       bash -c "echo 'rs.initiate();' | mongo -u erxes -p {{ mongodb_password }}"  
+
+- name: Run erxes up with --uis option
+  ansible.builtin.shell:
+    cmd: npm run erxes up -- --uis
+    chdir: "{{ app_path }}" 

@@ -10,6 +10,9 @@
 - include_tasks: nodejs.yaml
   when: ansible_os_family == 'Debian'
 
+- include_tasks: elasticsearch.yaml
+  when: ansible_os_family == 'Debian'
+
 - include_tasks: nginx.yaml
   when: ansible_os_family == 'Debian'
 
