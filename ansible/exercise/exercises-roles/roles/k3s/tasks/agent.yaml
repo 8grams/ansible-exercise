@@ -1,5 +1,5 @@
 - name: Install k3s agent
   ansible.builtin.shell: |
-    curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL={{ channel }} K3S_URL=https://{{ hostvars[groups['k3s_master'][0]]['ansible_host'] }}:6433 K3S_TOKEN={{ k3s_token }} sh -s -
+    curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL={{ channel }} sh -s - agent --server https://{{ hostvars[groups['k3s_master'][0]]['ansible_host'] }}:6443 --token {{ k3s_token }}
   args:
     executable: /bin/bash
