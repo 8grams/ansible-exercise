@@ -1,27 +1,24 @@
 ---
 
 - name: Add essyncer and elasticsearch objects to configs.yaml
-  community.general.json_modify:
-    path: "{{ app_path }}/configs.json"
-    action: add
-    pretty: yes
-    content:
-      essyncer: {}
-      elasticsearch: {}
+  ansible.builtin.shell:
+    cmd: >
+      jq '.essyncer = {} | .elasticsearch = {}' {{ app_dir }}/configs.json >
+      {{ app_dir }}/configs.json.tmp && mv {{ app_dir }}/configs.json.tmp {{ app_dir }}/configs.json
 
 - name: Run npm command to deploy databases for erxes
   ansible.builtin.shell:
     cmd: npm run erxes deploy-dbs
-    chdir: "{{ app_path }}"
+    chdir: "{{ app_dir }}"
 
 - name: Read MongoDB password from configs.json
   ansible.builtin.slurp:
-    src: "{{ app_path }}/configs.json"
+    src: "{{ app_dir }}/configs.json"
   register: configs_content
 
 - name: Set MongoDB password as a fact
   ansible.builtin.set_fact:
-    mongodb_password: "{{ (configs_content['content'] | b64decode | from_json)['mongodb']['password'] }}"
+    mongodb_password: "{{ (configs_content['content'] | b64decode | from_json)['mongo']['password'] }}"
 
 - name: Execute MongoDB command inside the Docker container
   community.docker.docker_container_exec:
@@ -32,4 +29,4 @@
 - name: Run erxes up with --uis option
   ansible.builtin.shell:
     cmd: npm run erxes up -- --uis
-    chdir: "{{ app_path }}" 
+    chdir: "{{ app_dir }}" 

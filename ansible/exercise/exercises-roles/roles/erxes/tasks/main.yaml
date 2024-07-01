@@ -1,13 +1,16 @@
 ---
 # tasks file for erxes
 
-- include_tasks: docker.yaml
-  when: ansible_os_family == 'Debian'
+# - include_tasks: docker.yaml
+#   when: ansible_os_family == 'Debian'
 
+# - include_tasks: nodejs.yaml
+#   when: ansible_os_family == 'Debian'
+  
 - include_tasks: app.yaml
   when: ansible_os_family == 'Debian'
 
-- include_tasks: nodejs.yaml
+- include_tasks: mongo.yaml
   when: ansible_os_family == 'Debian'
 
 - include_tasks: elasticsearch.yaml

@@ -3,6 +3,7 @@
 
 app_version: 1.7.0
 app_path: /app/erxes
+app_dir: /app/erxes/erxes
 nginx_conf_path: /etc/nginx/includes
 public_url: erxes.onxp.net
 author_email: glend@onxp.net

@@ -5,3 +5,6 @@
 
 - include_tasks: erxes.yaml
   when: ansible_os_family == 'Debian'
+
+- include_tasks: swarm.yaml
+  when: ansible_os_family == 'Debian'

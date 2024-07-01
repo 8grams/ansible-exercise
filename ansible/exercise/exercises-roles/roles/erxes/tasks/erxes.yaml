@@ -1,18 +1,36 @@
 ---
+- name: Check if the erxes directory exists
+  ansible.builtin.stat:
+    path: "{{ app_path }}/erxes"
+  register: erxes_dir
 
 - name: Scaffold new erxes application
   ansible.builtin.command:
-    cmd: create-erxes-app erxes
+    cmd: create-erxes-app erxes --domain={{ public_url }}
   args:
-    chdir: {{ app_path }}
+    chdir: "{{ app_path }}"
+  when: not erxes_dir.stat.exists
+
+- name: Set permissions
+  ansible.builtin.file:
+    path: "{{ app_dir }}/{{ item }}"
+    state: file
+    mode: '0755'
+  with_items: 
+    - configs.json
+    - package.json
+    - package-lock.json
+
+- name: Install jq
+  ansible.builtin.package:
+    name: jq
+    state: present
 
 - name: Update version in JSON file
-  community.general.json_modify:
-    path: "/opt/erxes/package.json"
-    pointer: "/version"
-    update: {{ app_version }}
+  ansible.builtin.shell:
+    cmd: 'jq ".version = \"{{ app_version }}\"" {{ app_dir }}/package.json > {{ app_dir }}/package.json.tmp && mv {{ app_dir }}/package.json.tmp {{ app_dir }}/package.json'
 
 - name: Run npm install in the erxes directory
   ansible.builtin.shell:
     cmd: npm install
-    chdir: {{ app_path }}
+    chdir: "{{ app_dir }}"
