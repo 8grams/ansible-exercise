@@ -1,0 +1,15 @@
+galaxy_info:
+  role_name: openstack
+  author: Glend Maatita
+  description: Install openstack
+  company: OnXP
+  license: MIT
+  min_ansible_version: "2.1"
+  reference: https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html
+
+  platforms:
+  - name: rocky 
+    versions:
+    - 8
+
+  galaxy_tags: ["openstack", "rocky"]
