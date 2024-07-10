@@ -1,9 +1,0 @@
-- name: Install Certbot Nginx
-  apt:
-    update_cache: yes
-    name: ['certbot', 'python3-certbot-nginx']
-    state: present
-- name: Generate Let's Encrypt certificate
-  command: certbot --nginx -d {{ public_url }} --email {{ author_email }} --agree-tos --no-eff-email --renew-by-default
-- name: restart nginx service
-  service: name=nginx state=restarted

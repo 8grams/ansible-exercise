@@ -1,6 +1,0 @@
-# ansible-playbook rke.yaml
-- name: Install and configure erxes
-  become: yes
-  hosts: erxes_server
-  roles:
-    - erxes

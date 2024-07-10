@@ -1,9 +1,0 @@
-# define user and group
-
----
-- name: Add docker users to the docker group.
-  user:
-    name: "{{ item }}"
-    groups: "{{ docker_group }}"
-    append: true
-  with_items: "{{ docker_users }}"
