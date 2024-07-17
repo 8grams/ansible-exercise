@@ -1,0 +1,35 @@
+# used as load balancer
+
+---
+- name: Install nginx
+  apt:
+    update_cache: yes
+    name: ['nginx']
+    state: present
+
+- name: Override nginx conf
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/conf.d/default.conf
+
+- name: Prepare nginx conf directory
+  file:
+    path: /etc/nginx/includes
+    state: directory
+
+- name: Override proxy conf
+  copy:
+    src: ./../files/proxy.conf
+    dest: /etc/nginx/includes/proxy.conf
+
+- name: Start nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+    
+- name: restart nginx service
+  systemd:
+    name: nginx
+    state: restarted
+    enabled: yes

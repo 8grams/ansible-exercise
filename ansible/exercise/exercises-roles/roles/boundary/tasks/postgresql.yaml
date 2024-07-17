@@ -1,0 +1,47 @@
+---
+- name: Install PostgreSQL server
+  ansible.builtin.shell:
+    cmd: pkg_add postgresql-server
+  register: install_result
+  changed_when: "'postgresql-server' in install_result.stdout"
+
+- name: Initialize the database
+  ansible.builtin.shell:
+    cmd: /usr/local/bin/initdb -D /var/postgresql/data -U postgres -E UTF8 -A scram-sha-256
+  args:
+    creates: /var/postgresql/data/PG_VERSION
+  become_user: _postgresql
+
+- name: Enable PostgreSQL service
+  ansible.builtin.shell:
+    cmd: rcctl enable postgresql
+
+- name: Start PostgreSQL service
+  ansible.builtin.shell:
+    cmd: rcctl start postgresql
+  register: start_result
+  changed_when: "'postgresql(ok)' in start_result.stdout or 'postgresql(failed)' in start_result.stdout"
+
+- name: Create a new PostgreSQL user
+  ansible.builtin.shell:
+    cmd: >
+      psql -U postgres -c "CREATE USER {{ pg_username }} WITH PASSWORD '{{ pg_password }}';"
+  become_user: _postgresql
+  environment:
+    PGDATA: /var/postgresql/data
+
+- name: Create a new database for the user
+  ansible.builtin.shell:
+    cmd: >
+      psql -U postgres -c "CREATE DATABASE {{ pg_dbname }} WITH OWNER {{ pg_username }};"
+  become_user: _postgresql
+  environment:
+    PGDATA: /var/postgresql/data
+
+- name: Grant permissions to the user on the database
+  ansible.builtin.shell:
+    cmd: >
+      psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE {{ pg_dbname }} TO {{ pg_username }};"
+  become_user: _postgresql
+  environment:
+    PGDATA: /var/postgresql/data

@@ -1,0 +1,6 @@
+# ansible-playbook boundary.yaml
+- name: Confgure Boundary
+  become: yes
+  hosts: boundary
+  roles:
+    - boundary

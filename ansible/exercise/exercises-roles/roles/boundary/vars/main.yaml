@@ -1,0 +1,13 @@
+---
+# vars file for boundary
+vault_url: https://vault.example.com
+public_url: https://boundary.example.com
+publid_domain: boundary.example.com
+author_email: glend@onxp.net
+boundary_version: 0.16.2
+tls_dir: /etc/boundary.d/tls
+kms_region: us-central1
+pg_host: localhost
+pg_username: boundary
+pg_password: onxpsecret
+pg_dbname: boundary

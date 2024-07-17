@@ -1,0 +1,8 @@
+---
+- name: Enable Boundary service
+  ansible.builtin.shell:
+    cmd: rcctl enable boundary
+
+- name: Start Boundary service
+  ansible.builtin.shell:
+    cmd: rcctl start boundary

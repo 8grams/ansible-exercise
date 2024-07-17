@@ -1,0 +1,49 @@
+- name: Update all installed packages with pkg_add
+  ansible.builtin.shell:
+    cmd: pkg_add -u
+  args:
+    warn: false
+
+- name: Install curl and unzip with pkg_add
+  ansible.builtin.shell:
+    cmd: pkg_add curl unzip certbot
+  args:
+    warn: false
+
+- name: Download Boundary zip file
+  ansible.builtin.get_url:
+    url: "https://releases.hashicorp.com/boundary/{{ boundary_version }}/boundary_{{ boundary_version }}_openbsd_amd64.zip"
+    dest: "/tmp/boundary_{{ boundary_version }}_openbsd_amd64.zip"
+
+- name: Unzip the Boundary package
+  ansible.builtin.unarchive:
+    src: "/tmp/boundary_{{ boundary_version }}_openbsd_amd64.zip"
+    dest: "/tmp"
+    remote_src: yes
+
+- name: Move Boundary to /usr/local/bin
+  ansible.builtin.shell:
+    cmd: "mv /tmp/boundary /usr/local/bin/"
+  args:
+    warn: false
+
+- name: Verify Boundary installation
+  ansible.builtin.command:
+    cmd: "boundary -version"
+  register: boundary_version_output
+
+- name: Show Boundary version
+  ansible.builtin.debug:
+    msg: "{{ boundary_version_output.stdout }}"
+
+- name: Create Boundary KMS Directory
+  ansible.builtin.file:
+    path: /usr/boundary/
+    mode: 0755
+    state: directory
+
+
+- name: Add KMS Service Account
+  copy:
+    src: ./../files/kms-sa.json
+    dest: /usr/boundary/kms-sa.json

@@ -1,0 +1,16 @@
+
+galaxy_info:
+  role_name: boundary
+  author: Glend Maatita
+  description: Configure Boundary HashiCorp
+  company: OnXP
+  license: MIT
+  min_ansible_version: "2.1"
+  reference: https://developer.hashicorp.com/boundary/docs
+
+  platforms:
+  - name: OpenBSD 
+    versions:
+    - 7.4
+
+  galaxy_tags: ["boundary", "hashicorp", "openbsd"]

@@ -1,0 +1,15 @@
+---
+- name: Create TLS Directory
+  ansible.builtin.file:
+    path: "{{ tls_dir }}"
+    mode: 0755
+    state: directory
+
+- name: Create Boundary config Directory
+  ansible.builtin.file:
+    path: /etc/boundary.d/
+    mode: 0755
+    state: directory
+
+
+    
