@@ -9,8 +9,8 @@ galaxy_info:
   reference: https://developer.hashicorp.com/boundary/docs
 
   platforms:
-  - name: OpenBSD 
+  - name: Debian 
     versions:
-    - 7.4
+    - Bookworm
 
-  galaxy_tags: ["boundary", "hashicorp", "openbsd"]
+  galaxy_tags: ["boundary", "hashicorp", "debian"]

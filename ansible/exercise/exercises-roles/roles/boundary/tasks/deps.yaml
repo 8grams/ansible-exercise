@@ -1,31 +1,36 @@
-- name: Update all installed packages with pkg_add
+---
+- name: Download and overwrite HashiCorp GPG key
+  ansible.builtin.shell: |
+    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor --yes -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+- name: Add HashiCorp repository
   ansible.builtin.shell:
-    cmd: pkg_add -u
-  args:
-    warn: false
+    cmd: echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 
-- name: Install curl and unzip with pkg_add
-  ansible.builtin.shell:
-    cmd: pkg_add curl unzip certbot
-  args:
-    warn: false
+- name: Update all installed packages
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: yes
 
-- name: Download Boundary zip file
-  ansible.builtin.get_url:
-    url: "https://releases.hashicorp.com/boundary/{{ boundary_version }}/boundary_{{ boundary_version }}_openbsd_amd64.zip"
-    dest: "/tmp/boundary_{{ boundary_version }}_openbsd_amd64.zip"
+- name: Install boundary and certbot
+  ansible.builtin.apt:
+    name:
+      - boundary
+      - certbot
+      - lsof
+    state: present
 
-- name: Unzip the Boundary package
-  ansible.builtin.unarchive:
-    src: "/tmp/boundary_{{ boundary_version }}_openbsd_amd64.zip"
-    dest: "/tmp"
-    remote_src: yes
+- name: Check if port 80 is in use
+  ansible.builtin.shell: |
+    lsof -i :80 -t || true
+  register: port_80_pid
 
-- name: Move Boundary to /usr/local/bin
-  ansible.builtin.shell:
-    cmd: "mv /tmp/boundary /usr/local/bin/"
-  args:
-    warn: false
+- name: Stop process using port 80 if it exists
+  ansible.builtin.shell: |
+    kill -9 {{ item }} || true
+  loop: "{{ port_80_pid.stdout_lines }}"
+  when: port_80_pid.stdout != ''
+  ignore_errors: yes
 
 - name: Verify Boundary installation
   ansible.builtin.command:
@@ -42,8 +47,13 @@
     mode: 0755
     state: directory
 
-
+# can be inserted when provision the VMs
+# - name: Add KMS Service Account
+#   copy:
+#     src: ./../files/kms-sa.json
+#     dest: /usr/boundary/kms-sa.json
 - name: Add KMS Service Account
-  copy:
-    src: ./../files/kms-sa.json
+  ansible.builtin.copy:
+    src: /home/boundary/kms-sa.json
     dest: /usr/boundary/kms-sa.json
+    remote_src: yes

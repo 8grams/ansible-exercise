@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    server_name {{ public_url }};
+
+    location / {
+        proxy_pass http://localhost:9200;
+        include /etc/nginx/includes/proxy.conf;
+    }
+}

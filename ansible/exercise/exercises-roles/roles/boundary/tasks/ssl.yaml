@@ -1,0 +1,43 @@
+---
+- name: Generate SSL certificate with Certbot
+  ansible.builtin.shell:
+    cmd: certbot certonly --standalone -d {{ public_url }} --non-interactive --agree-tos -m {{ author_email }}
+  delegate_to: "{{ groups['boundary_controller'][0] }}"
+  run_once: true
+
+- name: Fetch certificate from the node
+  ansible.builtin.fetch:
+    src: "/etc/letsencrypt/live/{{ public_url }}/fullchain.pem"
+    dest: "./certs/{{ inventory_hostname }}/boundary-cert.pem"
+    flat: yes
+  delegate_to: "{{ groups['boundary_controller'][0] }}"
+  run_once: true
+
+- name: Fetch private key from the node
+  ansible.builtin.fetch:
+    src: "/etc/letsencrypt/live/{{ public_url }}/privkey.pem"
+    dest: "./certs/{{ inventory_hostname }}/boundary-key.pem"
+    flat: yes
+  delegate_to: "{{ groups['boundary_controller'][0] }}"
+  run_once: true
+
+- name: Ensure the destination directory exists on all controller nodes
+  ansible.builtin.file:
+    path: /etc/boundary.d/tls
+    state: directory
+    mode: '0755'
+  loop: "{{ groups['boundary_controller'] }}"
+
+- name: Distribute certificate to all controller nodes
+  ansible.builtin.copy:
+    src: "./certs/{{ inventory_hostname }}/boundary-cert.pem"
+    dest: "{{ tls_dir }}/boundary-cert.pem"
+    mode: '0644'
+  loop: "{{ groups['boundary_controller'] }}"
+
+- name: Distribute private key to all controller nodes
+  ansible.builtin.copy:
+    src: "./certs/{{ inventory_hostname }}/boundary-key.pem"
+    dest: "{{ tls_dir }}/boundary-key.pem"
+    mode: '0600'
+  loop: "{{ groups['boundary_controller'] }}"

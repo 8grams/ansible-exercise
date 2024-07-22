@@ -1,0 +1,7 @@
+---
+
+- name: Copy recovery KMS for Boundary init
+  template:
+    src: recovery.hcl.j2
+    dest: /tmp/recovery.hcl
+

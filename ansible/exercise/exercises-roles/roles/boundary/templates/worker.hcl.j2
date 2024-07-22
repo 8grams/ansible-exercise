@@ -53,7 +53,7 @@ events {
 kms "gcpckms" {
   purpose     = "worker-auth-storage"
   credentials = "/usr/boundary/kms-sa.json"
-  project     = "boundary-project"
+  project     = "{{ kms_project }}"
   region      = "{{ kms_region }}"
   key_ring    = "boundary-keyring"
   crypto_key  = "boundary-key-storage"

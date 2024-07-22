@@ -13,3 +13,4 @@
 - name: Initialize Database
   ansible.builtin.shell:
     cmd: "boundary database init -config /etc/boundary.d/controller.hcl"
+    ignore_errors: yes

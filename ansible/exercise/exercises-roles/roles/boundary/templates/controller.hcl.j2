@@ -49,7 +49,7 @@ controller {
 
   # This is the public hostname or IP where the workers can reach the
   # controller. This should typically be a load balancer address
-  public_cluster_addr = "{{ publid_domain }}"
+  public_cluster_addr = "{{ public_url }}"
 
   # Enterprise license file, can also be the raw value or env:// value
   # license = "file:///path/to/license/file.hclic"
@@ -99,7 +99,7 @@ events {
 kms "gcpckms" {
   purpose     = "root"
   credentials = "/usr/boundary/kms-sa.json"
-  project     = "boundary-project"
+  project     = "{{ kms_project }}"
   region      = "{{ kms_region }}"
   key_ring    = "boundary-keyring"
   crypto_key  = "boundary-key-root"
@@ -109,7 +109,7 @@ kms "gcpckms" {
 kms "gcpckms" {
   purpose     = "recovery"
   credentials = "/usr/boundary/kms-sa.json"
-  project     = "boundary-project"
+  project     = "{{ kms_project }}"
   region      = "{{ kms_region }}"
   key_ring    = "boundary-keyring"
   crypto_key  = "boundary-key-recovery"
@@ -120,7 +120,7 @@ kms "gcpckms" {
 kms "gcpckms" {
   purpose     = "worker-auth"
   credentials = "/usr/boundary/kms-sa.json"
-  project     = "boundary-project"
+  project     = "{{ kms_project }}"
   region      = "{{ kms_region }}"
   key_ring    = "boundary-keyring"
   crypto_key  = "boundary-key-worker-auth"
@@ -131,7 +131,7 @@ kms "gcpckms" {
 kms "gcpckms" {
   purpose     = "bsr"
   credentials = "/usr/boundary/kms-sa.json"
-  project     = "boundary-project"
+  project     = "{{ kms_project }}"
   region      = "{{ kms_region }}"
   key_ring    = "boundary-keyring"
   crypto_key  = "boundary-key-bsr"

@@ -19,7 +19,7 @@
 
 - name: Override proxy conf
   copy:
-    src: ./../files/proxy.conf
+    src: ./../files/nginx/proxy.conf
     dest: /etc/nginx/includes/proxy.conf
 
 - name: Start nginx

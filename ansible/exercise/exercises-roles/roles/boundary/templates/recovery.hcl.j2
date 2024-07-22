@@ -1,0 +1,8 @@
+kms "gcpckms" {
+  purpose     = "recovery"
+  credentials = "/usr/boundary/kms-sa.json"
+  project     = "{{ kms_project }}"
+  region      = "{{ kms_region }}"
+  key_ring    = "boundary-keyring"
+  crypto_key  = "boundary-key-recovery"
+}

@@ -1,47 +1,38 @@
 ---
 - name: Install PostgreSQL server
-  ansible.builtin.shell:
-    cmd: pkg_add postgresql-server
-  register: install_result
-  changed_when: "'postgresql-server' in install_result.stdout"
+  ansible.builtin.apt:
+    name: postgresql
+    state: present
 
-- name: Initialize the database
-  ansible.builtin.shell:
-    cmd: /usr/local/bin/initdb -D /var/postgresql/data -U postgres -E UTF8 -A scram-sha-256
-  args:
-    creates: /var/postgresql/data/PG_VERSION
-  become_user: _postgresql
+- name: Ensure PostgreSQL service is enabled and running
+  ansible.builtin.systemd:
+    name: postgresql
+    state: started
+    enabled: yes
 
-- name: Enable PostgreSQL service
-  ansible.builtin.shell:
-    cmd: rcctl enable postgresql
+- name: Check if PostgreSQL user exists
+  ansible.builtin.shell: |
+    sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='{{ pg_username }}';"
+  register: user_exists
+  changed_when: false
 
-- name: Start PostgreSQL service
-  ansible.builtin.shell:
-    cmd: rcctl start postgresql
-  register: start_result
-  changed_when: "'postgresql(ok)' in start_result.stdout or 'postgresql(failed)' in start_result.stdout"
+- name: Create PostgreSQL user if it does not exist
+  ansible.builtin.shell: |
+    sudo -u postgres psql -c "CREATE USER {{ pg_username }} WITH PASSWORD '{{ pg_password }}';"
+  when: user_exists.stdout != "1"
 
-- name: Create a new PostgreSQL user
-  ansible.builtin.shell:
-    cmd: >
-      psql -U postgres -c "CREATE USER {{ pg_username }} WITH PASSWORD '{{ pg_password }}';"
-  become_user: _postgresql
-  environment:
-    PGDATA: /var/postgresql/data
+- name: Check if PostgreSQL database exists
+  ansible.builtin.shell: |
+    sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='{{ pg_dbname }}';"
+  register: db_exists
+  changed_when: false
 
-- name: Create a new database for the user
-  ansible.builtin.shell:
-    cmd: >
-      psql -U postgres -c "CREATE DATABASE {{ pg_dbname }} WITH OWNER {{ pg_username }};"
-  become_user: _postgresql
-  environment:
-    PGDATA: /var/postgresql/data
+- name: Create PostgreSQL database if it does not exist
+  ansible.builtin.shell: |
+    sudo -u postgres psql -c "CREATE DATABASE {{ pg_dbname }} WITH OWNER {{ pg_username }};"
+  when: db_exists.stdout != "1"
 
 - name: Grant permissions to the user on the database
   ansible.builtin.shell:
     cmd: >
-      psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE {{ pg_dbname }} TO {{ pg_username }};"
-  become_user: _postgresql
-  environment:
-    PGDATA: /var/postgresql/data
+      sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE {{ pg_dbname }} TO {{ pg_username }};"
