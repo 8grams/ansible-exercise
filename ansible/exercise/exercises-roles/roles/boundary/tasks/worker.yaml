@@ -3,4 +3,11 @@
 - name: Add Worker Config
   template:
     src: worker.hcl.j2
-    dest: /etc/boundary.d/egress-worker.hcl
+    dest: /etc/boundary.d/boundary.hcl
+
+- name: Set Auth storage
+  ansible.builtin.file:
+    path: /var/lib/boundary
+    mode: 0777
+    state: directory
+    

@@ -8,9 +8,11 @@
 - name: Add Controller Config
   template:
     src: controller.hcl.j2
-    dest: /etc/boundary.d/controller.hcl
+    dest: /etc/boundary.d/boundary.hcl
 
 - name: Initialize Database
   ansible.builtin.shell:
-    cmd: "boundary database init -config /etc/boundary.d/controller.hcl"
-    ignore_errors: yes
+    cmd: "boundary database init -config /etc/boundary.d/boundary.hcl"
+  ignore_errors: yes
+  async: 45
+  poll: 0  

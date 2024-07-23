@@ -39,5 +39,5 @@
   ansible.builtin.copy:
     src: "./certs/{{ inventory_hostname }}/boundary-key.pem"
     dest: "{{ tls_dir }}/boundary-key.pem"
-    mode: '0600'
+    mode: '0644'
   loop: "{{ groups['boundary_controller'] }}"

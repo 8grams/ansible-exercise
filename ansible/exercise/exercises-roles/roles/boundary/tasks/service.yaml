@@ -4,3 +4,10 @@
     name: boundary
     enabled: yes
     state: started
+
+- name: Set Boundary Log Directory
+  ansible.builtin.file:
+    path: /var/log/boundary
+    mode: 0777
+    state: directory
+    
