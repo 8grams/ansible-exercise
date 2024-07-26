@@ -1,4 +1,5 @@
 ---
+
 - name: Install PostgreSQL server
   ansible.builtin.apt:
     name: postgresql
@@ -31,6 +32,11 @@
   ansible.builtin.shell: |
     sudo -u postgres psql -c "CREATE DATABASE {{ pg_dbname }} WITH OWNER {{ pg_username }};"
   when: db_exists.stdout != "1"
+
+- name: Set superuser to the user on the database
+  ansible.builtin.shell:
+    cmd: >
+      sudo -u postgres psql -c "ALTER ROLE {{ pg_username }} WITH SUPERUSER;"
 
 - name: Grant permissions to the user on the database
   ansible.builtin.shell:

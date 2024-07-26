@@ -1,16 +1,12 @@
-# disable memory from being swapped to disk
 disable_mlock = true
 
-# listener denoting this is a worker proxy
 listener "tcp" {
   address = "0.0.0.0:9202"
   purpose = "proxy"
 }
 
-# worker block for configuring the specifics of the
-# worker service
 worker {
-  public_addr = "<worker_public_addr>"
+  public_addr = "{{ worker_url }}"
   initial_upstreams = ["{{ hostvars[groups['k3s_master'][0]]['ansible_host'] }}:9201"]
   auth_storage_path = "/var/lib/boundary"
   tags {
@@ -18,9 +14,6 @@ worker {
   }
 }
 
-# Events (logging) configuration. This
-# configures logging for ALL events to both
-# stderr and a file at /var/log/boundary/<boundary_use>.log
 events {
   audit_enabled       = true
   sysevents_enabled   = true
@@ -49,7 +42,6 @@ events {
   }
 }
 
-# kms block for encrypting the authentication PKI material
 kms "gcpckms" {
   purpose     = "worker-auth-storage"
   credentials = "/usr/boundary/kms-sa.json"

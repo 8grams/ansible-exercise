@@ -2,14 +2,24 @@
 # vars file for boundary
 vault_url: https://vault.example.com
 public_url: access.example.com
+install_url: 127.0.0.1
+worker_url: boundary.example.com
 author_email: glend@onxp.net
 boundary_version: 0.16.2
 tls_dir: /etc/boundary.d/tls
-kms_region: us-central1
-kms_project: my-project
+kms_region: asia-southeast2
+kms_project: pmrms-362603
 pg_host: localhost
 pg_username: boundary
 pg_password: onxpsecret
 pg_dbname: boundary
 login_name: boundary
 username: boundary_user
+
+cert_days: 365
+ca_key_pem: /etc/boundary.d/tls/ca-key.pem
+ca_pem: /etc/boundary.d/tls/ca.pem
+boundary_csr: /etc/boundary.d/tls/boundary.csr
+boundary_key_pem: /etc/boundary.d/tls/boundary-key.pem
+boundary_cert_pem: /etc/boundary.d/tls/boundary-cert.pem
+openssl_cnf_file: /etc/boundary.d/tls/openssl.cnf

@@ -33,6 +33,10 @@
   when:
     - "'boundary_lb' in group_names"
 
+# - include_tasks: init.yaml
+#   when:
+#     - "'boundary_controller' in group_names"
+
 - include_tasks: certbot.yaml
   when:
     - "'boundary_lb' in group_names"
