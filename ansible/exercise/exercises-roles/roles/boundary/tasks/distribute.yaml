@@ -1,0 +1,21 @@
+---
+- name: Distribute certificate to all nodes
+  ansible.builtin.copy:
+    src: "./certs/{{ groups['boundary_controller'][0] }}/boundary-key.pem"
+    dest: "{{ boundary_key_pem }}"
+    mode: '0644'
+  loop: "{{ groups['boundary_node'] }}"
+
+- name: Distribute private key to all nodes
+  ansible.builtin.copy:
+    src: "./certs/{{ groups['boundary_controller'][0] }}/boundary-cert.pem"
+    dest: "{{ boundary_cert_pem }}"
+    mode: '0644'
+  loop: "{{ groups['boundary_node'] }}"
+
+- name: Distribute CA key to all nodes
+  ansible.builtin.copy:
+    src: "./certs/{{ groups['boundary_controller'][0] }}/ca.pem"
+    dest: "{{ ca_pem }}"
+    mode: '0644'
+  loop: "{{ groups['boundary_node'] }}"

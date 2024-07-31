@@ -1,9 +1,9 @@
 ---
 # vars file for boundary
-vault_url: https://vault.example.com
-public_url: access.example.com
+vault_url: https://vault.ops.madrasahkemenag.com
+public_url: access.ops.madrasahkemenag.com
 install_url: 127.0.0.1
-worker_url: boundary.example.com
+worker_url: boundary-worker.ops.madrasahkemenag.com
 author_email: glend@onxp.net
 boundary_version: 0.16.2
 tls_dir: /etc/boundary.d/tls

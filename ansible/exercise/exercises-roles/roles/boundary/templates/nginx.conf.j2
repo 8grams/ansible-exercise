@@ -3,7 +3,14 @@ server {
     server_name {{ public_url }};
 
     location / {
-        proxy_pass http://localhost:9200;
+        proxy_pass https://localhost:9200;
         include /etc/nginx/includes/proxy.conf;
+
+        proxy_ssl_verify off;
+        proxy_ssl_trusted_certificate {{ boundary_cert_pem }};
+        proxy_ssl_certificate {{ boundary_cert_pem }};
+        proxy_ssl_certificate_key {{ boundary_key_pem }};
+
+        
     }
 }

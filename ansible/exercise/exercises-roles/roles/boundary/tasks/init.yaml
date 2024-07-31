@@ -1,58 +1,64 @@
 ---
 
-# - name: Copy recovery KMS for Boundary init
-#   template:
-#     src: recovery.hcl.j2
-#     dest: /tmp/recovery.hcl
+- name: Copy recovery KMS for Boundary init
+  template:
+    src: recovery.hcl.j2
+    dest: /tmp/recovery.hcl
 
-- name: Create Boundary scope org
-  ansible.builtin.shell:
-    cmd: >
-      boundary scopes create -name 'org' -scope-id 'global' -recovery-config /tmp/recovery.hcl -skip-admin-role-creation -skip-default-role-creation
-  register: boundary_scope_result
+# - name: Create Boundary scope org
+#   ansible.builtin.shell:
+#     cmd: >
+#       boundary scopes create -name 'org' -scope-id 'global' -recovery-config /tmp/recovery.hcl -skip-admin-role-creation -skip-default-role-creation
+#   register: boundary_scope_result
 
-- name: Debug scope
-  ansible.builtin.debug:
-    var: boundary_scope_result.stdout
+# - name: Debug scope
+#   ansible.builtin.debug:
+#     var: boundary_scope_result.stdout
 
-- name: Boundary Auth
-  ansible.builtin.shell:
-    cmd: >
-      boundary scopes create -name 'project' -scope-id {{ boundary_scope_result.stdout }} -recovery-config /tmp/recovery.hcl -skip-admin-role-creation -skip-default-role-creation
+# - name: Boundary Auth
+#   ansible.builtin.shell:
+#     cmd: >
+#       boundary scopes create -name 'project' -scope-id {{ boundary_scope_result.stdout }} -recovery-config /tmp/recovery.hcl -skip-admin-role-creation -skip-default-role-creation
 
-- name: Boundary Auth Method
-  ansible.builtin.shell:
-    cmd: >
-      boundary auth-methods create password -recovery-config /tmp/recovery.hcl -scope-id {{ boundary_scope_result.stdout }} -name 'default' -description 'Default Auth Method'
-  register: boundary_auth_result
+# - name: Boundary Auth Method
+#   ansible.builtin.shell:
+#     cmd: >
+#       boundary auth-methods create password -recovery-config /tmp/recovery.hcl -scope-id {{ boundary_scope_result.stdout }} -name 'default' -description 'Default Auth Method'
+#   register: boundary_auth_result
 
-- name: Debug auth method
-  ansible.builtin.debug:
-    var: boundary_auth_result.stdout
+# - name: Debug auth method
+#   ansible.builtin.debug:
+#     var: boundary_auth_result.stdout
 
-- name: Boundary Login Account
-  ansible.builtin.shell:
-    cmd: >
-      boundary accounts create password -recovery-config /tmp/recovery.hcl -login-name "{{ login_name }}" -auth-method-id {{ boundary_auth_result.stdout }}
-  register: boundary_account_result
+# - name: Boundary Login Account
+#   ansible.builtin.shell:
+#     cmd: >
+#       boundary accounts create password -recovery-config /tmp/recovery.hcl -login-name "{{ login_name }}" -auth-method-id {{ boundary_auth_result.stdout }}
+#   register: boundary_account_result
 
-- name: Debug login
-  ansible.builtin.debug:
-    var: boundary_account_result.stdout
+# - name: Debug login
+#   ansible.builtin.debug:
+#     var: boundary_account_result.stdout
 
-- name: Boundary User
-  ansible.builtin.shell:
-    cmd: >
-      boundary users create -scope-id {{ boundary_scope_result.stdout }} -recovery-config /tmp/recovery.hcl -name "{{ username }}" -description "Boundary User"
-  register: boundary_user_result
+# - name: Boundary User
+#   ansible.builtin.shell:
+#     cmd: >
+#       boundary users create -scope-id {{ boundary_scope_result.stdout }} -recovery-config /tmp/recovery.hcl -name "{{ username }}" -description "Boundary User"
+#   register: boundary_user_result
 
-- name: Debug user
-  ansible.builtin.debug:
-    var: boundary_user_result.stdout
+# - name: Debug user
+#   ansible.builtin.debug:
+#     var: boundary_user_result.stdout
 
-- name: Associate boundary User with login account
-  ansible.builtin.shell:
-    cmd: >
-      boundary users add-accounts -recovery-config /tmp/recovery.hcl -id {{ boundary_user_result }} -account {{ boundary_account_result }}
+# - name: Associate boundary User with login account
+#   ansible.builtin.shell:
+#     cmd: >
+#       boundary users add-accounts -recovery-config /tmp/recovery.hcl -id {{ boundary_user_result }} -account {{ boundary_account_result }}
 
 
+
+
+# boundary scopes create -name 'org' -scope-id 'global' \
+#   -recovery-config /tmp/recovery.hcl \
+#   -skip-admin-role-creation \
+#   -skip-default-role-creation

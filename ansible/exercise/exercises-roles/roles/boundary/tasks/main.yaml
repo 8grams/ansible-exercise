@@ -1,43 +1,47 @@
 ---
 # tasks file for boundary
 
-- include_tasks: deps.yaml
-  when:
-    - "'boundary_node' in group_names"
-
-- include_tasks: directory.yaml
-  when:
-    - "'boundary_node' in group_names"
-
-- include_tasks: ssl.yaml
-  when:
-  - "'boundary_controller' in group_names"
-
-- include_tasks: postgresql.yaml
-  when:
-  - "'boundary_db' in group_names"
-
-- include_tasks: controller.yaml
-  when:
-  - "'boundary_controller' in group_names"
-
-- include_tasks: worker.yaml
-  when:
-  - "'boundary_worker' in group_names"
-
-- include_tasks: service.yaml
-  when:
-    - "'boundary_node' in group_names"
-
-- include_tasks: nginx.yaml
-  when:
-    - "'boundary_lb' in group_names"
-
-# - include_tasks: init.yaml
+# - include_tasks: deps.yaml
 #   when:
-#     - "'boundary_controller' in group_names"
+#     - "'boundary_node' in group_names"
 
-- include_tasks: certbot.yaml
+# - include_tasks: directory.yaml
+#   when:
+#     - "'boundary_node' in group_names"
+
+# - include_tasks: ssl.yaml
+#   when:
+#   - "'boundary_controller' in group_names"
+
+# - include_tasks: distribute.yaml
+#   when:
+#   - "'boundary_node' in group_names"
+
+# - include_tasks: postgresql.yaml
+#   when:
+#   - "'boundary_db' in group_names"
+
+# - include_tasks: controller.yaml
+#   when:
+#   - "'boundary_controller' in group_names"
+
+# - include_tasks: worker.yaml
+#   when:
+#   - "'boundary_worker' in group_names"
+
+# - include_tasks: service.yaml
+#   when:
+#     - "'boundary_node' in group_names"
+
+# - include_tasks: nginx.yaml
+#   when:
+#     - "'boundary_lb' in group_names"
+
+- include_tasks: init.yaml
   when:
-    - "'boundary_lb' in group_names"
+    - "'boundary_controller' in group_names"
+
+# - include_tasks: certbot.yaml
+#   when:
+#     - "'boundary_lb' in group_names"
 

@@ -3,17 +3,23 @@
   stat:
     path: "{{ openssl_cnf_file }}"
   register: openssl_config
+  delegate_to: "{{ groups['boundary_controller'][0] }}"
+  run_once: true
 
 - name: Copy OpenSSL configuration
   template:
     src: openssl.cnf.j2
     dest: "{{ openssl_cnf_file }}"
   when: not openssl_config.stat.exists
+  delegate_to: "{{ groups['boundary_controller'][0] }}"
+  run_once: true
 
 - name: Check if OpenSSL Cert exists
   stat:
     path: "{{ boundary_cert_pem }}"
   register: boundary_cert_file
+  delegate_to: "{{ groups['boundary_controller'][0] }}"
+  run_once: true
 
 - name: Generate private key and certificate
   command:
@@ -44,23 +50,18 @@
   delegate_to: "{{ groups['boundary_controller'][0] }}"
   run_once: true
 
-- name: Ensure the destination directory exists on all controller nodes
+- name: Fetch CA key from the node
+  ansible.builtin.fetch:
+    src: "{{ ca_pem }}"
+    dest: "./certs/{{ inventory_hostname }}/ca.pem"
+    flat: yes
+  delegate_to: "{{ groups['boundary_controller'][0] }}"
+  run_once: true
+
+- name: Ensure the destination directory exists on all nodes
   ansible.builtin.file:
     path: /etc/boundary.d/tls
     state: directory
     mode: '0755'
-  loop: "{{ groups['boundary_controller'] }}"
+  loop: "{{ groups['boundary_node'] }}"
 
-- name: Distribute certificate to all controller nodes
-  ansible.builtin.copy:
-    src: "./certs/{{ inventory_hostname }}/boundary-cert.pem"
-    dest: "{{ tls_dir }}/boundary-cert.pem"
-    mode: '0644'
-  loop: "{{ groups['boundary_controller'] }}"
-
-- name: Distribute private key to all controller nodes
-  ansible.builtin.copy:
-    src: "./certs/{{ inventory_hostname }}/boundary-key.pem"
-    dest: "{{ tls_dir }}/boundary-key.pem"
-    mode: '0644'
-  loop: "{{ groups['boundary_controller'] }}"

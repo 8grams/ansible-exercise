@@ -7,7 +7,7 @@ listener "tcp" {
 
 worker {
   public_addr = "{{ worker_url }}"
-  initial_upstreams = ["{{ hostvars[groups['k3s_master'][0]]['ansible_host'] }}:9201"]
+  initial_upstreams = ["{{ hostvars[groups['boundary_controller'][0]]['ansible_host'] }}:9201"]
   auth_storage_path = "/var/lib/boundary"
   tags {
     type = ["worker", "egress"]
