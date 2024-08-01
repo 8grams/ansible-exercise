@@ -1,14 +1,14 @@
 ---
 # vars file for boundary
-vault_url: https://vault.ops.madrasahkemenag.com
-public_url: access.ops.madrasahkemenag.com
+vault_url: https://vault.example.com
+public_url: access.example.com
 install_url: 127.0.0.1
-worker_url: boundary-worker.ops.madrasahkemenag.com
+worker_url: boundary-worker.example.com
 author_email: glend@onxp.net
 boundary_version: 0.16.2
 tls_dir: /etc/boundary.d/tls
 kms_region: asia-southeast2
-kms_project: pmrms-362603
+kms_project: my-project
 pg_host: localhost
 pg_username: boundary
 pg_password: onxpsecret

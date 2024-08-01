@@ -9,13 +9,13 @@
 #   when:
 #     - "'boundary_node' in group_names"
 
-# - include_tasks: ssl.yaml
-#   when:
-#   - "'boundary_controller' in group_names"
+- include_tasks: ssl.yaml
+  when:
+  - "'boundary_controller' in group_names"
 
-# - include_tasks: distribute.yaml
-#   when:
-#   - "'boundary_node' in group_names"
+- include_tasks: distribute.yaml
+  when:
+  - "'boundary_node' in group_names"
 
 # - include_tasks: postgresql.yaml
 #   when:
@@ -37,9 +37,9 @@
 #   when:
 #     - "'boundary_lb' in group_names"
 
-- include_tasks: init.yaml
-  when:
-    - "'boundary_controller' in group_names"
+# - include_tasks: init.yaml
+#   when:
+#     - "'boundary_controller' in group_names"
 
 # - include_tasks: certbot.yaml
 #   when:

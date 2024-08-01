@@ -25,11 +25,10 @@
   command:
     cmd: "{{ item }}"
   with_items:
-    - openssl genpkey -algorithm RSA -out {{ ca_key_pem }}
-    - openssl req -x509 -new -nodes -key {{ ca_key_pem }} -sha256 -days 3650 -out {{ ca_pem }} -subj "/CN={{ public_url }}"
-    - openssl genpkey -algorithm RSA -out {{ boundary_key_pem }}
-    - openssl req -new -key {{ boundary_key_pem }} -out {{ boundary_csr }} -subj "/CN={{ ansible_default_ipv4.address }}"
-    - openssl x509 -req -in {{ boundary_csr }} -CA {{ ca_pem }} -CAkey {{ ca_key_pem }} -CAcreateserial -out {{ boundary_cert_pem }} -days 365 -extensions v3_req -extfile {{ openssl_cnf_file }}
+    - openssl genrsa -out {{ boundary_key_pem }} 2048
+    - openssl req -new -key {{ boundary_key_pem }} -out {{ boundary_csr }} -config {{ openssl_cnf_file }}
+    - openssl x509 -req -in {{ boundary_csr }} -signkey {{ boundary_key_pem }} -out {{ boundary_cert_pem }} -days 365 -extensions req_ext -extfile {{ openssl_cnf_file }}
+
   delegate_to: "{{ groups['boundary_controller'][0] }}"
   run_once: true
   when: not boundary_cert_file.stat.exists
@@ -46,14 +45,6 @@
   ansible.builtin.fetch:
     src: "{{ boundary_key_pem }}"
     dest: "./certs/{{ inventory_hostname }}/boundary-key.pem"
-    flat: yes
-  delegate_to: "{{ groups['boundary_controller'][0] }}"
-  run_once: true
-
-- name: Fetch CA key from the node
-  ansible.builtin.fetch:
-    src: "{{ ca_pem }}"
-    dest: "./certs/{{ inventory_hostname }}/ca.pem"
     flat: yes
   delegate_to: "{{ groups['boundary_controller'][0] }}"
   run_once: true
