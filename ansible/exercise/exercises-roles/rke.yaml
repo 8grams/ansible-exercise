@@ -2,7 +2,7 @@
 # To access locally:
 # - copy /etc/rancher/rke2/rke2.yaml (on master) to local ~/.kube/config. 
 # - Replace 127.0.0.1 with master's IP address  
-- name: Privision RKE Cluster
+- name: Provision RKE Cluster
   become: yes
   hosts: rke
   roles:

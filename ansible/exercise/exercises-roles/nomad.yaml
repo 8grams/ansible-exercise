@@ -71,7 +71,7 @@
     - never
     - fetch_cert
 
-- name: Privision Consul Cluster
+- name: Provision Consul Cluster
   become: yes
   hosts: consul
   roles:

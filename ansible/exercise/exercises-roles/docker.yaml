@@ -1,5 +1,5 @@
 # ansible-playbook docker.yaml
-- name: Privision app using docker
+- name: Provision app using docker
   become: yes
   hosts: webservers
   roles:
